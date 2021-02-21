@@ -18,3 +18,5 @@ Feb 20
 - Configured to use SQlite when run locally, Postgres on Heroku
 - Authentication (register, login, logout)
 - Basic views for User creation and profile page
+
+test
