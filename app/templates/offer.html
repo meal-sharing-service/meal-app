@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+
+<td width="70px">
+    <a href="{{ url_for('user', username=offer.author.username) }}">
+        <img src="{{ offer.author.avatar(70) }}" />
+    </a>
+</td>
+<td>
+    <a href="{{ url_for('user', username=offer.author.username) }}">
+        {{ offer.author.username }}
+    </a>
+    offers:
+    <br>
+    {{ offer.body }}
+    <br>
+    {{ offer.timestamp }}
+    {% if offer.author.username == current_user.username %}
+            <p><a href="{{ url_for('update', id=offer.id) }}">Edit offer</a></p>
+            <form action="{{ url_for('delete', id=offer.id) }}" method="post">
+                {{ form.hidden_tag() }}
+                {{ form.submit(value='Delete') }}
+            </form>
+            {% endif %}
+</td>
+
+{% endblock %}

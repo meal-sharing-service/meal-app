@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for, request
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, EditProfileForm, OfferForm
+from app.forms import LoginForm, RegistrationForm, EditProfileForm, OfferForm, EmptyForm
 from app.models import User, Offer
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
@@ -69,9 +69,10 @@ def register():
 @app.route('/user/<username>')
 @login_required
 def user(username):
+    form = EmptyForm()
     user = User.query.filter_by(username=username).first_or_404()
-    offers = current_user.offers.all()
-    return render_template('user.html', user=user, offers=offers)
+    offers = user.offers.all()
+    return render_template('user.html', user=user, offers=offers, form=form)
 
 @app.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
@@ -88,3 +89,47 @@ def edit_profile():
         form.about_me.data = current_user.about_me
     return render_template('edit_profile.html', title='Edit Profile',
                            form=form)
+
+@app.route('/offer/<id>')
+@login_required
+def offer(id):
+    form = EmptyForm()
+    offer = get_offer(id,check_author=False)
+    user = User.query.filter_by(username=offer.author.username).first
+    return render_template('offer.html', user=user, offer=offer, form=form)
+
+@app.route('/offer/<id>/update', methods=['GET', 'POST'])
+@login_required
+def update(id):
+    offer = get_offer(id)
+    form = OfferForm()
+    if form.validate_on_submit():
+        offer.body = form.offer.data
+        db.session.commit()
+        flash('Your changes have been saved.')
+        return redirect(url_for('offer', id=offer.id))
+    elif request.method == 'GET':
+        form.offer.data = offer.body
+    return render_template('update_offer.html', form=form)
+
+@app.route('/offer/<id>/delete', methods=['POST'])
+@login_required
+def delete(id):
+    form = EmptyForm()
+    offer = get_offer(id)
+    if form.validate_on_submit():
+        db.session.delete(offer)
+        db.session.commit()
+        flash('Offer deleted.')
+    return redirect(url_for('user', username=offer.author.username))
+
+def get_offer(id, check_author=True):
+    offer = Offer.query.get(id)
+
+    if offer is None:
+        abort(404, "Offer id {0} doesn't exist.".format(id))
+
+    if check_author and offer.author.username != current_user.username:
+        abort(403)
+
+    return offer
