@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect, url_for, request
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, EditProfileForm
-from app.models import User
+from app.forms import LoginForm, RegistrationForm, EditProfileForm, OfferForm
+from app.models import User, Offer
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
 from datetime import datetime
@@ -14,9 +14,21 @@ def before_request():
 
 @app.route('/')
 @app.route('/index')
-@login_required
 def index():
-	return render_template('index.html', title='Home')
+    return render_template('index.html')
+
+@app.route('/explore', methods=['GET', 'POST'])
+@login_required
+def explore():
+    form = OfferForm()
+    if form.validate_on_submit():
+        offer = Offer(body=form.offer.data, author=current_user)
+        db.session.add(offer)
+        db.session.commit()
+        flash('Your offer is now live!')
+        return redirect(url_for('explore'))
+    offers = Offer.query.order_by(Offer.timestamp.desc()).all()
+    return render_template('explore.html', title='Home', form=form, offers=offers)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -31,7 +43,7 @@ def login():
         login_user(user, remember=form.remember_me.data)
         next_page = request.args.get('next')
         if not next_page or url_parse(next_page).netloc != '':
-            next_page = url_for('index')
+            next_page = url_for('explore')
         return redirect(next_page)
     return render_template('login.html', title='Sign In', form=form)
 
@@ -58,7 +70,8 @@ def register():
 @login_required
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
-    return render_template('user.html', user=user)
+    offers = current_user.offers.all()
+    return render_template('user.html', user=user, offers=offers)
 
 @app.route('/edit_profile', methods=['GET', 'POST'])
 @login_required

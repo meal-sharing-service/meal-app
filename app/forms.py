@@ -3,6 +3,11 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextA
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Length
 from app.models import User
 
+class OfferForm(FlaskForm):
+    offer = TextAreaField('Offer something!', validators=[
+        DataRequired(), Length(min=1, max=140)])
+    submit = SubmitField('Submit')
+
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])

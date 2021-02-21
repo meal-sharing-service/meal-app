@@ -1,0 +1,14 @@
+<table>
+    <tr valign="top">
+        <td><img src="{{ offer.author.avatar(36) }}"></td>
+
+        <td>
+            <a href="{{ url_for('user', username=offer.author.username) }}">
+            {{ offer.author.username }} 
+        </a>
+            offers:  {{ offer.body }}
+            <br>
+            {{ offer.timestamp}}
+        </td>
+    </tr>
+</table>
