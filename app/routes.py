@@ -22,7 +22,16 @@ def index():
 def explore():
     form = OfferForm()
     if form.validate_on_submit():
-        offer = Offer(body=form.offer.data, author=current_user)
+        offer = Offer(
+            title=form.title.data,
+            body=form.body.data,
+            servings=form.servings.data,
+            expiration=form.expiration.data,
+            category_id=form.category_id.data,
+            condition=form.condition.data,
+            price=form.price.data,
+            request=form.request.data, 
+            author=current_user)
         db.session.add(offer)
         db.session.commit()
         flash('Your offer is now live!')
@@ -58,7 +67,16 @@ def register():
         return redirect(url_for('index'))
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User(username=form.username.data, email=form.email.data)
+        user = User(
+            first_name=form.first_name.data,
+            last_name=form.last_name.data,
+            address=form.address.data,
+            postal_code=form.postal_code.data,
+            state_province=form.state_province.data,
+            country=form.country.data,
+            username=form.username.data, 
+            email=form.email.data,
+            interest=form.interest.data)
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
@@ -81,12 +99,26 @@ def edit_profile():
     if form.validate_on_submit():
         current_user.username = form.username.data
         current_user.about_me = form.about_me.data
+        current_user.first_name=form.first_name.data
+        current_user.last_name=form.last_name.data
+        current_user.address=form.address.data
+        current_user.postal_code=form.postal_code.data
+        current_user.state_province=form.state_province.data
+        current_user.country=form.country.data
+        current_user.email=form.email.data
         db.session.commit()
         flash('Your changes have been saved.')
         return redirect(url_for('edit_profile'))
     elif request.method == 'GET':
         form.username.data = current_user.username
         form.about_me.data = current_user.about_me
+        form.first_name.data = current_user.first_name
+        form.last_name.data = current_user.last_name
+        form.address.data = current_user.address
+        form.postal_code.data = current_user.postal_code
+        form.state_province.data = current_user.state_province
+        form.country.data = current_user.country
+        form.email.data = current_user.email
     return render_template('edit_profile.html', title='Edit Profile',
                            form=form)
 
@@ -104,12 +136,26 @@ def update(id):
     offer = get_offer(id)
     form = OfferForm()
     if form.validate_on_submit():
-        offer.body = form.offer.data
+        offer.title = form.title.data
+        offer.body = form.body.data
+        offer.servings = form.servings.data
+        offer.expiration = form.expiration.data
+        offer.category_id = form.category_id.data
+        offer.condition = form.condition.data
+        offer.price = form.price.data
+        offer.request = form.request.data
         db.session.commit()
         flash('Your changes have been saved.')
         return redirect(url_for('offer', id=offer.id))
     elif request.method == 'GET':
-        form.offer.data = offer.body
+        form.title.data = offer.title
+        form.body.data = offer.body
+        form.servings.data = offer.servings
+        form.expiration.data = offer.expiration
+        form.category_id.data = offer.category_id
+        form.condition.data = offer.condition
+        form.price.data = offer.price
+        form.request.data = offer.request
     return render_template('update_offer.html', form=form)
 
 @app.route('/offer/<id>/delete', methods=['POST'])

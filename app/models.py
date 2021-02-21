@@ -11,6 +11,13 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     about_me = db.Column(db.String(140))
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
+    first_name = db.Column(db.String(64))
+    last_name = db.Column(db.String(64))
+    address = db.Column(db.String(128))
+    postal_code = db.Column(db.String(64))
+    state_province = db.Column(db.String(64))
+    country = db.Column(db.String(64))
+    interest = db.Column(db.String(128))
     offers = db.relationship('Offer', backref='author', lazy='dynamic')
 
     def __repr__(self):
@@ -29,7 +36,14 @@ class User(UserMixin, db.Model):
 
 class Offer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(64))
     body = db.Column(db.String(140))
+    servings = db.Column(db.Integer)
+    expiration = db.Column(db.String(64))
+    category_id = db.Column(db.Integer)
+    price = db.Column(db.Float)
+    request = db.Column(db.Boolean)
+    condition = db.Column(db.String(64))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 

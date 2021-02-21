@@ -13,16 +13,28 @@
     </a>
     offers:
     <br>
-    {{ offer.body }}
+    <p><b>{{ offer.title }}</b></p>
+    <p>Description: 
+        {{ offer.body }}
+    </p>
+    <ul>
+    <li>Servings: {{ offer.servings }}</li>
+    <li>Offer Date: {{ offer.timestamp }}</li>
+    <li>Expiration: {{ offer.expiration }}</li>
+    <li>Category ID: {{ offer.category_id }}</li>
+    <li>Condition: {{ offer.condition }}</li>
+    <li>Request for food? {{ offer.request }}</li>
+    <li>Offer Price: {{ offer.price }}</li>
+    </ul>
     <br>
-    {{ offer.timestamp }}
+    
     {% if offer.author.username == current_user.username %}
             <p><a href="{{ url_for('update', id=offer.id) }}">Edit offer</a></p>
             <form action="{{ url_for('delete', id=offer.id) }}" method="post">
                 {{ form.hidden_tag() }}
                 {{ form.submit(value='Delete') }}
             </form>
-            {% endif %}
+    {% endif %}
 </td>
 
 {% endblock %}

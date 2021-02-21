@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, IntegerField, FloatField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Length
 from app.models import User
 
@@ -7,8 +7,15 @@ class EmptyForm(FlaskForm):
     submit = SubmitField('Submit')
 
 class OfferForm(FlaskForm):
-    offer = TextAreaField('Offer something!', validators=[
+    title = StringField('Title', validators=[DataRequired()])
+    body = TextAreaField('Description', validators=[
         DataRequired(), Length(min=1, max=140)])
+    servings = IntegerField('Servings Offered', validators=[DataRequired()])
+    expiration = StringField('Expiration', validators=[DataRequired()])
+    category_id = IntegerField('Category ID (number)')
+    condition = StringField('Condition', validators=[DataRequired()])
+    price = FloatField('Asking Price (leave blank for giveaway!)')
+    request = BooleanField('This is a request for food')
     submit = SubmitField('Submit')
 
 class LoginForm(FlaskForm):
@@ -18,11 +25,18 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Sign In')
 
 class RegistrationForm(FlaskForm):
+    first_name = StringField('First Name', validators=[DataRequired()])
+    last_name = StringField('Last Name', validators=[DataRequired()])
+    address = StringField('Address', validators=[DataRequired()])
+    postal_code = StringField('Postal Code', validators=[DataRequired()])
+    state_province = StringField('State/Province', validators=[DataRequired()])
+    country = StringField('Country', validators=[DataRequired()])
     username = StringField('Username', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
     password2 = PasswordField(
         'Repeat Password', validators=[DataRequired(), EqualTo('password')])
+    interest = StringField('I am interested in: ')
     submit = SubmitField('Register')
 
     def validate_username(self, username):
@@ -37,7 +51,14 @@ class RegistrationForm(FlaskForm):
 
 class EditProfileForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
     about_me = TextAreaField('About me', validators=[Length(min=0, max=140)])
+    first_name = StringField('First Name', validators=[DataRequired()])
+    last_name = StringField('Last Name', validators=[DataRequired()])
+    address = StringField('Address', validators=[DataRequired()])
+    postal_code = StringField('Postal Code', validators=[DataRequired()])
+    state_province = StringField('State/Province', validators=[DataRequired()])
+    country = StringField('Country', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
     def __init__(self, original_username, *args, **kwargs):
