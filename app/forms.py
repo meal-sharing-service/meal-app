@@ -14,7 +14,6 @@ class OfferForm(FlaskForm):
     expiration = StringField('Expiration', validators=[DataRequired()])
     category_id = IntegerField('Category ID (number)')
     condition = StringField('Condition', validators=[DataRequired()])
-    price = FloatField('Asking Price (leave blank for giveaway!)')
     request = BooleanField('This is a request for food')
     submit = SubmitField('Submit')
 
