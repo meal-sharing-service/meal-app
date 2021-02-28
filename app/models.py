@@ -21,6 +21,7 @@ class User(UserMixin, db.Model):
     country = db.Column(db.String(64))
     interest = db.Column(db.String(128))
     offers = db.relationship('Offer', backref='author', lazy='dynamic')
+    orders = db.relationship('Order', backref='recipient', lazy='dynamic')
 
     def __repr__(self):
         return '<User {}>'.format(self.username)    
@@ -54,7 +55,9 @@ class Offer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(64))
     body = db.Column(db.String(140))
+    pickup = db.Column(db.String(140))
     servings = db.Column(db.Integer)
+    claims = db.Column(db.Integer,default=0)
     expiration = db.Column(db.String(64))
     category_id = db.Column(db.Integer)
     request = db.Column(db.Boolean)
@@ -63,7 +66,19 @@ class Offer(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __repr__(self):
-        return '<Offer {}>'.format(self.body)
+        return '<Offer {}>'.format(self.title)
+
+class Order(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    offer_id = db.Column(db.Integer, db.ForeignKey('offer.id'))
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+
+    users = db.relationship('User', backref="order")
+    offer = db.relationship('Offer', backref="orders")
+    
+    def __repr__(self):
+        return '<Order {}>'.format(self.id)
 
 @login.user_loader
 def load_user(id):

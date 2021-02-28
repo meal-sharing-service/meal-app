@@ -1,0 +1,27 @@
+<table class="table table-hover">
+    <tr>
+        <td width="70px">
+            <a href="{{ url_for('offer', id=order.offer.id) }}">
+                <img src="{{ order.offer.author.avatar(70) }}" />
+            </a>
+        </td>
+        <td>
+            <a href="{{ url_for('user', username=order.offer.author.username) }}">
+                {{ order.offer.author.username }}
+            </a>
+            offers:
+            <p><b>{{ order.offer.title }}</b></p>
+            {% if order.offer.request == True %}
+                <p>Requested</p>
+            {% else %}
+                <p>Shared</p>
+            {% endif %}
+            <p>Desc: {{ order.offer.body }}</p>
+            <p>Offer Date: {{ order.offer.timestamp }}</p>
+            <form action="{{ url_for('unclaim', id=order.offer.id) }}" method="post">
+                {{ form.hidden_tag() }}
+                {{ form.submit(value='Unclaim Offer') }}
+            </form> 
+        </td>
+    </tr>
+</table>

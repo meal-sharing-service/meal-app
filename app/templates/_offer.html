@@ -18,14 +18,32 @@
             {% endif %}
             <p>Desc: {{ offer.body }}</p>
             <p>Offer Date: {{ offer.timestamp }}</p>
+            <p>Remaining Servings: {{ offer.servings - offer.claims }}</p>
             <br>
             
+            {% set ns = namespace(claimed=False) %}
+            {% for order in offer.orders %}
+                {% if order.recipient == current_user %}
+                    {% set ns.claimed = True %}
+                {% endif %}
+            {% endfor %}
+
             {% if offer.author.username == current_user.username %}
             <p><a href="{{ url_for('update', id=offer.id) }}">Edit offer</a></p>
             <form action="{{ url_for('delete', id=offer.id) }}" method="post">
                 {{ form.hidden_tag() }}
-                {{ form.submit(value='Delete') }}
+                {{ form.submit(value='Delete Offer') }}
             </form>
+            {% elif ns.claimed %}
+            <form action="{{ url_for('unclaim', id=offer.id) }}" method="post">
+                {{ form.hidden_tag() }}
+                {{ form.submit(value='Unclaim Offer') }}
+            </form> 
+            {% else %}
+            <form action="{{ url_for('claim', id=offer.id) }}" method="post">
+                {{ form.hidden_tag() }}
+                {{ form.submit(value='Claim Offer') }}
+            </form>    
             {% endif %}
         </td>
     </tr>

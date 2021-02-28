@@ -1,6 +1,6 @@
 from app import app, db
-from app.models import User, Offer
+from app.models import User, Offer, Order
 
 @app.shell_context_processor
 def make_shell_context():
-    return {'db': db, 'User': User, 'Offer': Offer}
+    return {'db': db, 'User': User, 'Offer': Offer, 'Order': Order}
