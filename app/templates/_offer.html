@@ -11,6 +11,11 @@
             </a>
             offers:
             <p><b>{{ offer.title }}</b></p>
+            {% if offer.request == True %}
+                <p>Requested</p>
+            {% else %}
+                <p>Shared</p>
+            {% endif %}
             <p>Desc: {{ offer.body }}</p>
             <p>Offer Date: {{ offer.timestamp }}</p>
             <br>
