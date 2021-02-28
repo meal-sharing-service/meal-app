@@ -18,6 +18,11 @@
     </tr>
 </table>
 <br>
+<h2>Your Orders</h2>
+{% for order in orders %}
+    {% include '_order.html' %}
+{% endfor %}
+<h2>Your Offers/Requests</h2>
     {% for offer in offers %}
         {% include '_offer.html' %}
     {% endfor %}

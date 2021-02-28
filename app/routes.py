@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect, url_for, request
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, EditProfileForm, OfferForm, EmptyForm, ResetPasswordRequestForm, ResetPasswordForm, EditOfferForm, RequestForm
-from app.models import User, Offer
+from app.models import User, Offer, Order
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
 from datetime import datetime
@@ -145,7 +145,8 @@ def user(username):
     form = EmptyForm()
     user = User.query.filter_by(username=username).first_or_404()
     offers = user.offers.all()
-    return render_template('user.html', user=user, offers=offers, form=form)
+    orders = user.orders.all()
+    return render_template('user.html', user=user, offers=offers, form=form, orders=orders)
 
 @app.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
@@ -213,6 +214,21 @@ def delete(id):
         db.session.commit()
         flash('Offer deleted.')
     return redirect(url_for('user', username=offer.author.username))
+
+@app.route('/offer/<id>/claim', methods=['POST'])
+@login_required
+def claim(id):
+    form = EmptyForm()
+    offer = get_offer(id,check_author=False)
+    if form.validate_on_submit():
+        order = Order(
+            user_id = current_user.id,
+            offer_id = offer.id
+            )
+        db.session.add(order)
+        db.session.commit()
+        flash('Offer claimed!')
+    return redirect(url_for('offer', id=offer.id))
 
 def get_offer(id, check_author=True):
     offer = Offer.query.get(id)

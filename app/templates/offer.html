@@ -24,6 +24,9 @@
     <li>Category ID: {{ offer.category_id }}</li>
     <li>Condition: {{ offer.condition }}</li>
     <li>Request for food? {{ offer.request }}</li>
+    <li>Servings: {{ offer.servings }}</li>
+    <li>Claimed Servings: {{ offer.claims }}</li>
+    <li>Remaining Servings: {{ offer.servings - offer.claims }}</li>
     </ul>
     <br>
     

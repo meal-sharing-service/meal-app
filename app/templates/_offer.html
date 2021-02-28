@@ -18,6 +18,7 @@
             {% endif %}
             <p>Desc: {{ offer.body }}</p>
             <p>Offer Date: {{ offer.timestamp }}</p>
+            <p>Remaining Servings: {{ offer.servings - offer.claims }}</p>
             <br>
             
             {% if offer.author.username == current_user.username %}
@@ -26,6 +27,11 @@
                 {{ form.hidden_tag() }}
                 {{ form.submit(value='Delete') }}
             </form>
+            {% else %}
+            <form action="{{ url_for('claim', id=offer.id) }}" method="post">
+                {{ form.hidden_tag() }}
+                {{ form.submit(value='Claim Offer') }}
+            </form>    
             {% endif %}
         </td>
     </tr>
