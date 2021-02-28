@@ -55,6 +55,7 @@ class Offer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(64))
     body = db.Column(db.String(140))
+    pickup = db.Column(db.String(140))
     servings = db.Column(db.Integer)
     claims = db.Column(db.Integer,default=0)
     expiration = db.Column(db.String(64))
@@ -74,7 +75,7 @@ class Order(db.Model):
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 
     users = db.relationship('User', backref="order")
-    offer = db.relationship('Offer', backref="order")
+    offer = db.relationship('Offer', backref="orders")
     
     def __repr__(self):
         return '<Order {}>'.format(self.id)

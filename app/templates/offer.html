@@ -14,28 +14,51 @@
     offers:
     <br>
     <p><b>{{ offer.title }}</b></p>
-    <p>Description: 
+    <p>Description:
         {{ offer.body }}
     </p>
     <ul>
-    <li>Servings: {{ offer.servings }}</li>
-    <li>Offer Date: {{ offer.timestamp }}</li>
-    <li>Expiration: {{ offer.expiration }}</li>
-    <li>Category ID: {{ offer.category_id }}</li>
-    <li>Condition: {{ offer.condition }}</li>
-    <li>Request for food? {{ offer.request }}</li>
-    <li>Servings: {{ offer.servings }}</li>
-    <li>Claimed Servings: {{ offer.claims }}</li>
-    <li>Remaining Servings: {{ offer.servings - offer.claims }}</li>
+        <li>Servings: {{ offer.servings }}</li>
+        <li>Offer Date: {{ offer.timestamp }}</li>
+        <li>Expiration: {{ offer.expiration }}</li>
+        <li>Category ID: {{ offer.category_id }}</li>
+        <li>Condition: {{ offer.condition }}</li>
+        <li>Request for food? {{ offer.request }}</li>
+        <li>Servings: {{ offer.servings }}</li>
+        <li>Claimed Servings: {{ offer.claims }}</li>
+        <li>Remaining Servings: {{ offer.servings - offer.claims }}</li>
     </ul>
     <br>
-    
+
+    {% set ns = namespace(claimed=False) %}
+    {% for order in offer.orders %}
+    {% if order.recipient == current_user %}
+    {% set ns.claimed = True %}
+    {% endif %}
+    {% endfor %}
+
     {% if offer.author.username == current_user.username %}
-            <p><a href="{{ url_for('update', id=offer.id) }}">Edit offer</a></p>
-            <form action="{{ url_for('delete', id=offer.id) }}" method="post">
-                {{ form.hidden_tag() }}
-                {{ form.submit(value='Delete') }}
-            </form>
+    <p>Pickup Instructions: {{ offer.pickup }}</p>
+    <p><a href="{{ url_for('update', id=offer.id) }}">Edit offer</a></p>
+    <form action="{{ url_for('delete', id=offer.id) }}" method="post">
+        {{ form.hidden_tag() }}
+        {{ form.submit(value='Delete Offer') }}
+    </form>
+    {% elif ns.claimed %}
+    <p>Pickup Instructions: {{ offer.pickup }}</p>
+    <p>Address: {{ offer.author.address }}</p>
+    <p>Postal Code: {{ offer.author.postal_code }}</p>
+    <p>State/Province: {{ offer.author.state_province }}</p>
+    <p>Country: {{ offer.author.country }}</p>
+    <form action="{{ url_for('unclaim', id=offer.id) }}" method="post">
+        {{ form.hidden_tag() }}
+        {{ form.submit(value='Unclaim Offer') }}
+    </form>
+    {% else %}
+    <form action="{{ url_for('claim', id=offer.id) }}" method="post">
+        {{ form.hidden_tag() }}
+        {{ form.submit(value='Claim Offer') }}
+    </form>
     {% endif %}
 </td>
 

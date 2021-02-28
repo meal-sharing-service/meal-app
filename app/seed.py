@@ -1,6 +1,9 @@
 from app import app, db
 from app.models import User, Offer, Order
 
+db.drop_all()
+db.create_all()
+
 user1 = User(
     username = 'mark',
     email = 'mswaringen@gmail.com',

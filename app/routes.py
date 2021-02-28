@@ -33,6 +33,7 @@ def create_offer():
         offer = Offer(
             title=form.title.data,
             body=form.body.data,
+            pickup=form.pickup.data,
             servings=form.servings.data,
             expiration=form.expiration.data,
             category_id=form.category_id.data,
@@ -53,6 +54,7 @@ def create_request():
         offer = Offer(
             title=form.title.data,
             body=form.body.data,
+            pickup=form.pickup.data,
             servings=form.servings.data,
             expiration=form.expiration.data,
             category_id=form.category_id.data,
@@ -193,6 +195,7 @@ def update(id):
     form = EditOfferForm()
     if form.validate_on_submit():
         offer.body = form.body.data
+        offer.pickup = form.pickup.data
         offer.category_id = form.category_id.data
         offer.condition = form.condition.data
         db.session.commit()
@@ -200,6 +203,7 @@ def update(id):
         return redirect(url_for('offer', id=offer.id))
     elif request.method == 'GET':
         form.body.data = offer.body
+        form.pickup.data = offer.pickup
         form.category_id.data = offer.category_id
         form.condition.data = offer.condition
     return render_template('update_offer.html', form=form, offer=offer)
@@ -225,10 +229,24 @@ def claim(id):
             user_id = current_user.id,
             offer_id = offer.id
             )
+        offer.claims += 1
         db.session.add(order)
         db.session.commit()
         flash('Offer claimed!')
     return redirect(url_for('offer', id=offer.id))
+
+@app.route('/offer/<id>/unclaim', methods=['POST'])
+@login_required
+def unclaim(id):
+    form = EmptyForm()
+    offer = get_offer(id,check_author=False)
+    order = get_order(id)
+    if form.validate_on_submit():
+        offer.claims -= 1
+        db.session.delete(order)
+        db.session.commit()
+        flash('Claim deleted.')
+    return redirect(url_for('explore'))
 
 def get_offer(id, check_author=True):
     offer = Offer.query.get(id)
@@ -240,3 +258,17 @@ def get_offer(id, check_author=True):
         abort(403)
 
     return offer
+
+def get_order(id):
+    offer = Offer.query.get(id)
+    if offer is None:
+        abort(404, "Offer id {0} doesn't exist.".format(id))
+
+    orders = offer.orders
+    
+    for order in orders:
+        if order.user_id == current_user.id:
+            return order
+    abort(403)
+    
+    

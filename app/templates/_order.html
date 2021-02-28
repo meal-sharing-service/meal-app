@@ -18,7 +18,10 @@
             {% endif %}
             <p>Desc: {{ order.offer.body }}</p>
             <p>Offer Date: {{ order.offer.timestamp }}</p>
-
+            <form action="{{ url_for('unclaim', id=order.offer.id) }}" method="post">
+                {{ form.hidden_tag() }}
+                {{ form.submit(value='Unclaim Offer') }}
+            </form> 
         </td>
     </tr>
 </table>
