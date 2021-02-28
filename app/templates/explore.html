@@ -1,14 +1,9 @@
 {% extends "base.html" %}
-{% import 'bootstrap/wtf.html' as wtf %}
 
 {% block app_content %}
-    <h5>Hi, {{ current_user.username }}!</h5>    
-    <h1>Explore</h1>
-    
-    {% if form %}
-    {{ wtf.quick_form(form) }}
-    <br>
-    {% endif %}
+    <h5>Hi, {{ current_user.first_name }}!</h5>
+    <a class="btn btn-primary" href="{{ url_for('create_offer') }}" role="button">Share Food</a>
+    <a class="btn btn-outline-primary" href="{{ url_for('create_request') }}" role="button">Request Food</a>     
     <h2>Current Offers</h2>
     {% for offer in offers %}
         {% include '_offer.html' %}

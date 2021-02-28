@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for, request
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, EditProfileForm, OfferForm, EmptyForm, ResetPasswordRequestForm, ResetPasswordForm
+from app.forms import LoginForm, RegistrationForm, EditProfileForm, OfferForm, EmptyForm, ResetPasswordRequestForm, ResetPasswordForm, EditOfferForm, RequestForm
 from app.models import User, Offer
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
@@ -18,9 +18,16 @@ def before_request():
 def index():
     return render_template('index.html')
 
-@app.route('/explore', methods=['GET', 'POST'])
+@app.route('/explore')
 @login_required
 def explore():
+    form = EmptyForm()
+    offers = Offer.query.order_by(Offer.timestamp.desc()).all()
+    return render_template('explore.html', offers=offers, form=form)
+
+@app.route('/offer/create_offer', methods=['GET', 'POST'])
+@login_required
+def create_offer():
     form = OfferForm()
     if form.validate_on_submit():
         offer = Offer(
@@ -30,14 +37,33 @@ def explore():
             expiration=form.expiration.data,
             category_id=form.category_id.data,
             condition=form.condition.data,
-            request=form.request.data, 
+            request=False, 
             author=current_user)
         db.session.add(offer)
         db.session.commit()
         flash('Your offer is now live!')
         return redirect(url_for('explore'))
-    offers = Offer.query.order_by(Offer.timestamp.desc()).all()
-    return render_template('explore.html', title='Home', form=form, offers=offers)
+    return render_template('create_offer.html', title='Share Food', form=form)
+
+@app.route('/offer/create_request', methods=['GET', 'POST'])
+@login_required
+def create_request():
+    form = RequestForm()
+    if form.validate_on_submit():
+        offer = Offer(
+            title=form.title.data,
+            body=form.body.data,
+            servings=form.servings.data,
+            expiration=form.expiration.data,
+            category_id=form.category_id.data,
+            condition=form.condition.data,
+            request=True, 
+            author=current_user)
+        db.session.add(offer)
+        db.session.commit()
+        flash('Your request is now live!')
+        return redirect(url_for('explore'))
+    return render_template('create_request.html', title='Request Food', form=form)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -163,27 +189,19 @@ def offer(id):
 @login_required
 def update(id):
     offer = get_offer(id)
-    form = OfferForm()
+    form = EditOfferForm()
     if form.validate_on_submit():
-        offer.title = form.title.data
         offer.body = form.body.data
-        offer.servings = form.servings.data
-        offer.expiration = form.expiration.data
         offer.category_id = form.category_id.data
         offer.condition = form.condition.data
-        offer.request = form.request.data
         db.session.commit()
         flash('Your changes have been saved.')
         return redirect(url_for('offer', id=offer.id))
     elif request.method == 'GET':
-        form.title.data = offer.title
         form.body.data = offer.body
-        form.servings.data = offer.servings
-        form.expiration.data = offer.expiration
         form.category_id.data = offer.category_id
         form.condition.data = offer.condition
-        form.request.data = offer.request
-    return render_template('update_offer.html', form=form)
+    return render_template('update_offer.html', form=form, offer=offer)
 
 @app.route('/offer/<id>/delete', methods=['POST'])
 @login_required
