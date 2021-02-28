@@ -19,7 +19,6 @@ def index():
     return render_template('index.html')
 
 @app.route('/explore')
-@login_required
 def explore():
     form = EmptyForm()
     offers = Offer.query.order_by(Offer.timestamp.desc()).all()
@@ -181,7 +180,6 @@ def edit_profile():
                            form=form)
 
 @app.route('/offer/<id>')
-@login_required
 def offer(id):
     form = EmptyForm()
     offer = get_offer(id,check_author=False)
