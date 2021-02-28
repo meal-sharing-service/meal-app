@@ -41,7 +41,6 @@ class Offer(db.Model):
     servings = db.Column(db.Integer)
     expiration = db.Column(db.String(64))
     category_id = db.Column(db.Integer)
-    price = db.Column(db.Float)
     request = db.Column(db.Boolean)
     condition = db.Column(db.String(64))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)

@@ -13,7 +13,6 @@
             <p><b>{{ offer.title }}</b></p>
             <p>Desc: {{ offer.body }}</p>
             <p>Offer Date: {{ offer.timestamp }}</p>
-            <p>Price: {{ offer.price }}</p>
             <br>
             
             {% if offer.author.username == current_user.username %}

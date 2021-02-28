@@ -29,7 +29,6 @@ def explore():
             expiration=form.expiration.data,
             category_id=form.category_id.data,
             condition=form.condition.data,
-            price=form.price.data,
             request=form.request.data, 
             author=current_user)
         db.session.add(offer)
@@ -142,7 +141,6 @@ def update(id):
         offer.expiration = form.expiration.data
         offer.category_id = form.category_id.data
         offer.condition = form.condition.data
-        offer.price = form.price.data
         offer.request = form.request.data
         db.session.commit()
         flash('Your changes have been saved.')
@@ -154,7 +152,6 @@ def update(id):
         form.expiration.data = offer.expiration
         form.category_id.data = offer.category_id
         form.condition.data = offer.condition
-        form.price.data = offer.price
         form.request.data = offer.request
     return render_template('update_offer.html', form=form)
 
