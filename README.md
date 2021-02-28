@@ -10,13 +10,9 @@ On initial repo clone
 - Activiate virtual env: source venv/bin/activate
 - Deactive: source venv/bin/activate
 
-Run locally
+Run locally (in venv)
+- "pip install -r requirements.txt"
 - "flask run"
 
-Feb 20
-- Added User model
-- Configured to use SQlite when run locally, Postgres on Heroku
-- Authentication (register, login, logout)
-- Basic views for User creation and profile page
-
-test
+Save pip installs to file
+- "pip freeze > requirements.txt"
