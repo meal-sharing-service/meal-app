@@ -8,4 +8,10 @@
     {% for offer in offers %}
         {% include '_offer.html' %}
     {% endfor %}
+    {% if prev_url %}
+    <a href="{{ prev_url }}">Newer offers</a>
+    {% endif %}
+    {% if next_url %}
+    <a href="{{ next_url }}">Older offers</a>
+    {% endif %}
 {% endblock %}

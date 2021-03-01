@@ -21,8 +21,15 @@ def index():
 @app.route('/explore')
 def explore():
     form = EmptyForm()
-    offers = Offer.query.order_by(Offer.timestamp.desc()).all()
-    return render_template('explore.html', offers=offers, form=form)
+    page = request.args.get('page', 1, type=int)
+    offers = Offer.query.order_by(Offer.timestamp.desc()).paginate(
+        page, app.config['OFFERS_PER_PAGE'], False)
+    next_url = url_for('explore', page=offers.next_num) \
+        if offers.has_next else None
+    prev_url = url_for('explore', page=offers.prev_num) \
+        if offers.has_prev else None
+    return render_template('explore.html', title='Explore', offers=offers.items, form=form, 
+                            next_url=next_url, prev_url=prev_url)
 
 @app.route('/offer/create_offer', methods=['GET', 'POST'])
 @login_required
@@ -145,8 +152,8 @@ def register():
 def user(username):
     form = EmptyForm()
     user = User.query.filter_by(username=username).first_or_404()
-    offers = user.offers.all()
-    orders = user.orders.all()
+    offers = user.offers.order_by(Offer.timestamp.desc()).all()
+    orders = user.orders.order_by(Order.timestamp.desc()).all()
     return render_template('user.html', user=user, offers=offers, form=form, orders=orders)
 
 @app.route('/edit_profile', methods=['GET', 'POST'])
