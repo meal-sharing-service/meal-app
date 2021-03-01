@@ -9,10 +9,17 @@
             {% if user.about_me %}<p>About: {{ user.about_me }}</p>{% endif %}
             <p>Interest: {{user.interest}}</p>
             <p>Location: {{user.state_province}}, {{user.country}}</p>
-            
+
             {% if user.last_seen %}<p>Last seen on: {{ moment(user.last_seen).format('LLL') }}</p>{% endif %}
             {% if user == current_user %}
             <p><a href="{{ url_for('edit_profile') }}">Edit your profile</a></p>
+            {% else %}
+            <p>
+                <a href="{{ url_for('send_message',
+                                    recipient=user.username) }}">
+                    Send private message
+                </a>
+            </p>
             {% endif %}
         </td>
     </tr>
@@ -20,10 +27,10 @@
 <br>
 <h2>Your Orders</h2>
 {% for order in orders %}
-    {% include '_order.html' %}
+{% include '_order.html' %}
 {% endfor %}
 <h2>Your Offers/Requests</h2>
-    {% for offer in offers %}
-        {% include '_offer.html' %}
-    {% endfor %}
+{% for offer in offers %}
+{% include '_offer.html' %}
+{% endfor %}
 {% endblock %}

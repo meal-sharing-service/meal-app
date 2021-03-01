@@ -50,11 +50,15 @@
     <p>Postal Code: {{ offer.author.postal_code }}</p>
     <p>State/Province: {{ offer.author.state_province }}</p>
     <p>Country: {{ offer.author.country }}</p>
+    <p><a href="{{ url_for('send_message', recipient=offer.author.username) }}">
+                    Message User</a></p>
     <form action="{{ url_for('unclaim', id=offer.id) }}" method="post">
         {{ form.hidden_tag() }}
         {{ form.submit(value='Unclaim Offer') }}
     </form>
     {% else %}
+    <p><a href="{{ url_for('send_message', recipient=offer.author.username) }}">
+        Message User</a></p>
     <form action="{{ url_for('claim', id=offer.id) }}" method="post">
         {{ form.hidden_tag() }}
         {{ form.submit(value='Claim Offer') }}
