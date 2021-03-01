@@ -19,7 +19,7 @@
     </p>
     <ul>
         <li>Servings: {{ offer.servings }}</li>
-        <li>Offer Date: {{ offer.timestamp }}</li>
+        <li>Offer Date: {{ moment(offer.timestamp).format('LLLL') }}</li>
         <li>Expiration: {{ offer.expiration }}</li>
         <li>Category ID: {{ offer.category_id }}</li>
         <li>Condition: {{ offer.condition }}</li>

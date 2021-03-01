@@ -17,7 +17,7 @@
                 <p>Shared</p>
             {% endif %}
             <p>Desc: {{ offer.body }}</p>
-            <p>Offer Date: {{ offer.timestamp }}</p>
+            <p>Offer Date: {{ moment(offer.timestamp).format('LLLL') }}</p>
             <p>Remaining Servings: {{ offer.servings - offer.claims }}</p>
             <br>
             
