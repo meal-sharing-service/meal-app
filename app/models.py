@@ -6,6 +6,7 @@ from hashlib import md5
 from time import time
 import jwt
 
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
@@ -63,6 +64,7 @@ class User(UserMixin, db.Model):
             return
         return User.query.get(id)
 
+
 class Offer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(64))
@@ -80,6 +82,39 @@ class Offer(db.Model):
     def __repr__(self):
         return '<Offer {}>'.format(self.title)
 
+
+class Recipe(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64))
+
+    ingredients = db.relationship("Ingredient", secondary="IngredientList")
+
+    def __repr__(self):
+        return '<Recipe {}>'.format(self.name)
+
+
+class Ingredient(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64))
+
+    ingredients = db.relationship("Recipe", secondary="ingredientList")
+
+    def __repr__(self):
+        return '<Offer {}>'.format(self.title)
+
+
+class IngredientList(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'))
+    ingredient_id = db.Column(db.Integer, db.ForeignKey('ingredient.id'))
+
+    recipe = db.relationship(Recipe, backref=db.backref("ingredientList", cascade="all, delete-orphan"))
+    recipe = db.relationship(Ingredient, backref=db.backref("ingredientList", cascade="all, delete-orphan"))
+
+    def __repr__(self):
+        return '<Offer {}>'.format(self.title)
+
+
 class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
@@ -91,6 +126,7 @@ class Order(db.Model):
     
     def __repr__(self):
         return '<Order {}>'.format(self.id)
+
 
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -6,6 +6,15 @@ from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
 from datetime import datetime
 from app.email import send_password_reset_email
+from json import loads
+from requests import get
+
+
+SPOONACULAR_APIKEY = "c917e235c7cd4c389ffc901c220f86d8"
+COMPLEX_SEARCH_URL = "https://api.spoonacular.com/recipes/complexSearch"
+APIKEY_PARAM = "?apikey="+SPOONACULAR_APIKEY
+DEFAULT_SEARCH_BATCH = 10
+
 
 @app.before_request
 def before_request():
@@ -13,10 +22,12 @@ def before_request():
         current_user.last_seen = datetime.utcnow()
         db.session.commit()
 
+
 @app.route('/')
 @app.route('/index')
 def index():
     return render_template('index.html')
+
 
 @app.route('/explore')
 def explore():
@@ -30,6 +41,7 @@ def explore():
         if offers.has_prev else None
     return render_template('explore.html', title='Explore', offers=offers.items, form=form, 
                             next_url=next_url, prev_url=prev_url)
+
 
 @app.route('/offer/create_offer', methods=['GET', 'POST'])
 @login_required
@@ -52,6 +64,7 @@ def create_offer():
         return redirect(url_for('explore'))
     return render_template('create_offer.html', title='Share Food', form=form)
 
+
 @app.route('/offer/create_request', methods=['GET', 'POST'])
 @login_required
 def create_request():
@@ -73,6 +86,7 @@ def create_request():
         return redirect(url_for('explore'))
     return render_template('create_request.html', title='Request Food', form=form)
 
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -90,6 +104,7 @@ def login():
         return redirect(next_page)
     return render_template('login.html', title='Sign In', form=form)
 
+
 @app.route('/reset_password_request', methods=['GET', 'POST'])
 def reset_password_request():
     if current_user.is_authenticated:
@@ -103,6 +118,7 @@ def reset_password_request():
         return redirect(url_for('login'))
     return render_template('reset_password_request.html',
                            title='Reset Password', form=form)
+
 
 @app.route('/reset_password/<token>', methods=['GET', 'POST'])
 def reset_password(token):
@@ -119,10 +135,12 @@ def reset_password(token):
         return redirect(url_for('login'))
     return render_template('reset_password.html', form=form)
 
+
 @app.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('index'))
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -147,6 +165,7 @@ def register():
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
 
+
 @app.route('/user/<username>')
 @login_required
 def user(username):
@@ -155,6 +174,7 @@ def user(username):
     offers = user.offers.order_by(Offer.timestamp.desc()).all()
     orders = user.orders.order_by(Order.timestamp.desc()).all()
     return render_template('user.html', user=user, offers=offers, form=form, orders=orders)
+
 
 @app.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
@@ -186,12 +206,14 @@ def edit_profile():
     return render_template('edit_profile.html', title='Edit Profile',
                            form=form)
 
+
 @app.route('/offer/<id>')
 def offer(id):
     form = EmptyForm()
     offer = get_offer(id,check_author=False)
     user = User.query.filter_by(username=offer.author.username).first
     return render_template('offer.html', user=user, offer=offer, form=form)
+
 
 @app.route('/offer/<id>/update', methods=['GET', 'POST'])
 @login_required
@@ -213,6 +235,7 @@ def update(id):
         form.condition.data = offer.condition
     return render_template('update_offer.html', form=form, offer=offer)
 
+
 @app.route('/offer/<id>/delete', methods=['POST'])
 @login_required
 def delete(id):
@@ -223,6 +246,7 @@ def delete(id):
         db.session.commit()
         flash('Offer deleted.')
     return redirect(url_for('user', username=offer.author.username))
+
 
 @app.route('/offer/<id>/claim', methods=['POST'])
 @login_required
@@ -240,6 +264,7 @@ def claim(id):
         flash('Offer claimed!')
     return redirect(url_for('offer', id=offer.id))
 
+
 @app.route('/offer/<id>/unclaim', methods=['POST'])
 @login_required
 def unclaim(id):
@@ -252,6 +277,7 @@ def unclaim(id):
         db.session.commit()
         flash('Claim deleted.')
     return redirect(url_for('explore'))
+
 
 @app.route('/send_message/<recipient>', methods=['GET', 'POST'])
 @login_required
@@ -267,6 +293,7 @@ def send_message(recipient):
         return redirect(url_for('user', username=user.username))
     return render_template('send_message.html', title='Send Message',
                            form=form, recipient=recipient)
+
 
 @app.route('/messages')
 @login_required
@@ -284,6 +311,7 @@ def messages():
     return render_template('messages.html', messages=messages.items,
                            next_url=next_url, prev_url=prev_url)
 
+
 def get_offer(id, check_author=True):
     offer = Offer.query.get(id)
 
@@ -294,6 +322,7 @@ def get_offer(id, check_author=True):
         abort(403)
 
     return offer
+
 
 def get_order(id):
     offer = Offer.query.get(id)
@@ -306,5 +335,36 @@ def get_order(id):
         if order.user_id == current_user.id:
             return order
     abort(403)
-    
-    
+
+
+def search_recipe(query, parameters):
+
+    string = COMPLEX_SEARCH_URL + APIKEY_PARAM + "&query=" + query
+
+    if parameters is not None:
+        for parameter in parameters:
+            string = string + "&" + parameter
+
+    string = string + "&number=" + str(DEFAULT_SEARCH_BATCH)
+
+    response = get(string)
+    print("sending request: " + string)
+    return response.content
+
+
+def parse_recipe(response):
+    data = loads(response.decode("utf-8"))
+    instructions = ""
+    ingredient_ids = []
+    ingredient_names = []
+    cuisines = data['results'][0]['cuisines']
+    id = data['results'][0]['id']
+    summary = data['results'][0]['summary']
+    for inst in data['results'][0]['analyzedInstructions'][0]['steps']:
+        instructions = instructions + inst['step']
+        for ing in inst['ingredients']:
+            if ing['id'] not in ingredient_ids:
+                ingredient_ids.append(ing['id'])
+                ingredient_names.append(ing['name'])
+
+    return id, summary, ingredient_ids, ingredient_names, cuisines, instructions

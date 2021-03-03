@@ -1,15 +1,18 @@
 import requests
+import json
+
 
 class ApiConnector():
     def __init__(self, url, number=2):
         self.number = number
         self.url = url
 
+
 class spoonacularApiConnector(ApiConnector):
 
-    def __init__(self, url, number=2, apiKey="?apiKey=c917e235c7cd4c389ffc901c220f86d8"):
+    def __init__(self, url, number=2, apiKey="?apiKey=e6dd71bc643e4baca4fb9c8cfab6f668"):
         super().__init__(url, number=number)
-        self.apiKey = "?apiKey=c917e235c7cd4c389ffc901c220f86d8"
+        self.apiKey = "?apiKey=e6dd71bc643e4baca4fb9c8cfab6f668"
 
     def complexSearch(self, query, parameters):
         string = self.url + "recipes/complexSearch" + self.apiKey + "&query=" + query
@@ -17,18 +20,39 @@ class spoonacularApiConnector(ApiConnector):
         for parameter in parameters:
             string = string + "&" + parameter
 
-        string = string + "&number="+str(self.number)
+        string = string + "&number=" + str(self.number)
 
         response = requests.get(string)
         print("sending request: " + string)
-        print(response.content)
-
+        return response.content
 
 
 def main():
-   con = spoonacularApiConnector("https://api.spoonacular.com/")
-   for i in range(100):
-    con.complexSearch("burrito", ["addRecipeInformation=true"])
+    con = spoonacularApiConnector("https://api.spoonacular.com/")
+    resp = None
+    for i in range(1):
+        resp = con.complexSearch("burrito", ["addRecipeInformation=true"])
+    data = json.loads(resp.decode("utf-8"))
+    cuisines = data['results'][0]['cuisines']
+    id = data['results'][0]['id']
+    #calories = data['results'][0]['calories']
+    summary = data['results'][0]['summary']
+    print(id)
+    print(summary)
+    instructions = ""
+    ingredient_ids = []
+    ingredient_names = []
+    cuisines = data['results'][0]['cuisines']
+
+    for inst in data['results'][0]['analyzedInstructions'][0]['steps']:
+        instructions = instructions + inst['step']
+        for ing in inst['ingredients']:
+            if ing['id'] not in ingredient_ids:
+                ingredient_ids.append(ing['id'])
+                ingredient_names.append(ing['name'])
+
+    print(ingredient_names)
+
 
 
 if __name__ == "__main__":
