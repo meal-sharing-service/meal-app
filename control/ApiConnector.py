@@ -37,7 +37,19 @@ def main():
     id = data['results'][0]['id']
     #calories = data['results'][0]['calories']
     summary = data['results'][0]['summary']
-    print(id)
+    print(data)
+    vegetarian = data['results'][0]['vegetarian']
+    vegan = data['results'][0]['vegan']
+    glutenFree = data['results'][0]['glutenFree']
+    dairyFree = data['results'][0]['dairyFree']
+
+    allergyDict = {"vegan": vegan,
+                   "vegetarian": vegetarian,
+                   "glutenFree": glutenFree,
+                   "dairyFree": dairyFree}
+
+    print(allergyDict)
+
     print(summary)
     instructions = ""
     ingredient_ids = []

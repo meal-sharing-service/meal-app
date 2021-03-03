@@ -82,7 +82,7 @@ class Offer(db.Model):
     def __repr__(self):
         return '<Offer {}>'.format(self.title)
 
-
+"""
 class Recipe(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64))
@@ -113,7 +113,7 @@ class IngredientList(db.Model):
 
     def __repr__(self):
         return '<Offer {}>'.format(self.title)
-
+"""
 
 class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)

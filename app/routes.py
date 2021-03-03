@@ -367,4 +367,14 @@ def parse_recipe(response):
                 ingredient_ids.append(ing['id'])
                 ingredient_names.append(ing['name'])
 
-    return id, summary, ingredient_ids, ingredient_names, cuisines, instructions
+    vegetarian = data['results'][0]['vegetarian']
+    vegan = data['results'][0]['vegan']
+    glutenFree = data['results'][0]['glutenFree']
+    dairyFree = data['results'][0]['dairyFree']
+
+    allergyDict = {"vegan": vegan,
+                   "vegetarian": vegetarian,
+                   "glutenFree": glutenFree,
+                   "dairyFree": dairyFree}
+
+    return id, summary, ingredient_ids, ingredient_names, allergyDict, cuisines, instructions
