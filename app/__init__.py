@@ -7,12 +7,11 @@ from flask_bootstrap import Bootstrap
 from logging.handlers import SMTPHandler
 from flask_mail import Mail
 from flask_moment import Moment
-# from flask_googlemaps import GoogleMaps
-# from flask_googlemaps import Map
 import logging
 from logging.handlers import RotatingFileHandler
 import os
 import cloudinary
+from flask_googlemaps import GoogleMaps
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -23,8 +22,7 @@ login.login_view = 'login'
 bootstrap = Bootstrap(app)
 mail = Mail(app)
 moment = Moment(app)
-
-
+GoogleMaps(app,key = app.config['GOOGLEMAPS_KEY'])
 
 cloudinary.config(
     cloud_name = app.config['CLOUDINARY_CLOUD_NAME'],

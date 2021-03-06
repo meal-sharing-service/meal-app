@@ -11,11 +11,7 @@ from requests import get
 from cloudinary.uploader import upload
 from cloudinary.utils import cloudinary_url
 from flask_googlemaps import Map
-from flask_googlemaps import GoogleMaps
 from flask_googlemaps import get_coordinates
-
-api_key = 'AIzaSyBO_o7kCsu19VyrQd2zKAdJaQL6bORn4ws'
-GoogleMaps(app, key=api_key)
 
 SPOONACULAR_APIKEY = "c917e235c7cd4c389ffc901c220f86d8"
 COMPLEX_SEARCH_URL = "https://api.spoonacular.com/recipes/complexSearch"
@@ -365,7 +361,7 @@ def mapview():
         lng=4.9041389,
         markers = markers
     )
-    return render_template('map_view.html', mymap=mymap, offers=offers, key=api_key)
+    return render_template('map_view.html', mymap=mymap, offers=offers)
 
 def geo_lookup(user):
     full_addr = user.address +" "+ user.state_province +" "+ user.postal_code +" "+ user.country
