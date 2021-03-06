@@ -10,6 +10,7 @@ from flask_moment import Moment
 import logging
 from logging.handlers import RotatingFileHandler
 import os
+import cloudinary
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -20,6 +21,12 @@ login.login_view = 'login'
 bootstrap = Bootstrap(app)
 mail = Mail(app)
 moment = Moment(app)
+
+cloudinary.config(
+    cloud_name = app.config['CLOUDINARY_CLOUD_NAME'],
+    api_key = app.config['CLOUDINARY_API_KEY'],
+    api_secret = app.config['CLOUDINARY_API_SECRET']
+)
 
 from app import routes, models, errors
 

@@ -8,12 +8,22 @@
     </a>
 </td>
 <td>
+    <p>
     <a href="{{ url_for('user', username=offer.author.username) }}">
         {{ offer.author.username }}
     </a>
     offers:
+</p>
+</td>    
+    {% if offer.image_public_id %}
     <br>
-    <p><b>{{ offer.title }}</b></p>
+    <p>
+    <img src="{{ offer_image }}">
+    </p>
+    {% else %}
+                <img src="https://res.cloudinary.com/duqxnurie1/image/upload/c_scale,w_300/v1615004423/default-mss_x7h68r.png">
+    {% endif %}
+    <p><h3>{{ offer.title }}</h3></p>
     <p>Description:
         {{ offer.body }}
     </p>
@@ -29,6 +39,7 @@
         <li>Remaining Servings: {{ offer.servings - offer.claims }}</li>
     </ul>
     <br>
+    
 
     {% set ns = namespace(claimed=False) %}
     {% for order in offer.orders %}
@@ -56,14 +67,16 @@
         {{ form.hidden_tag() }}
         {{ form.submit(value='Unclaim Offer') }}
     </form>
-    {% else %}
+    {% elif (offer.servings - offer.claims) > 0 %}
     <p><a href="{{ url_for('send_message', recipient=offer.author.username) }}">
         Message User</a></p>
     <form action="{{ url_for('claim', id=offer.id) }}" method="post">
         {{ form.hidden_tag() }}
         {{ form.submit(value='Claim Offer') }}
     </form>
+    {% else %}
+        <h4>All gone!</h4>
     {% endif %}
-</td>
+
 
 {% endblock %}

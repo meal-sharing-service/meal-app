@@ -8,6 +8,8 @@ from datetime import datetime
 from app.email import send_password_reset_email
 from json import loads
 from requests import get
+from cloudinary.uploader import upload
+from cloudinary.utils import cloudinary_url
 
 
 SPOONACULAR_APIKEY = "c917e235c7cd4c389ffc901c220f86d8"
@@ -58,6 +60,15 @@ def create_offer():
             condition=form.condition.data,
             request=False, 
             author=current_user)
+        if form.image.data:
+            upload_result = upload(form.image.data)
+            offer.image_public_id = upload_result['public_id']
+            offer.image_thumbnail, options = cloudinary_url(
+                    offer.image_public_id,
+                    format="jpg",
+                    crop="fill",
+                    width=200,
+                    height=200)
         db.session.add(offer)
         db.session.commit()
         flash('Your offer is now live!')
@@ -80,6 +91,15 @@ def create_request():
             condition=form.condition.data,
             request=True, 
             author=current_user)
+        if form.image.data:
+            upload_result = upload(form.image.data)
+            offer.image_public_id = upload_result['public_id']
+            offer.image_thumbnail, options = cloudinary_url(
+                    offer.image_public_id,
+                    format="jpg",
+                    crop="fill",
+                    width=200,
+                    height=200)
         db.session.add(offer)
         db.session.commit()
         flash('Your request is now live!')
@@ -212,7 +232,13 @@ def offer(id):
     form = EmptyForm()
     offer = get_offer(id,check_author=False)
     user = User.query.filter_by(username=offer.author.username).first
-    return render_template('offer.html', user=user, offer=offer, form=form)
+    offer_image, options = cloudinary_url(
+                    offer.image_public_id,
+                    format="jpg",
+                    crop="fill",
+                    width=300,
+                    height=300)
+    return render_template('offer.html', user=user, offer=offer, form=form, offer_image=offer_image)
 
 
 @app.route('/offer/<id>/update', methods=['GET', 'POST'])
