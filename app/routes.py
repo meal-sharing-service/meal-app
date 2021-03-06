@@ -363,7 +363,7 @@ def mapview():
     )
     return render_template('map_view.html', mymap=mymap, offers=offers)
 
-@app.route('/api/vi/offers/all', methods=['GET'])
+@app.route('/api/v1/offers/all', methods=['GET'])
 def api_all():
     return jsonify([
     {
