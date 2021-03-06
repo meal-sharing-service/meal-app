@@ -91,15 +91,6 @@ def create_request():
             condition=form.condition.data,
             request=True, 
             author=current_user)
-        if form.image.data:
-            upload_result = upload(form.image.data)
-            offer.image_public_id = upload_result['public_id']
-            offer.image_thumbnail, options = cloudinary_url(
-                    offer.image_public_id,
-                    format="jpg",
-                    crop="fill",
-                    width=200,
-                    height=200)
         db.session.add(offer)
         db.session.commit()
         flash('Your request is now live!')
