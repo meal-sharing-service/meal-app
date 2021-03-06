@@ -10,7 +10,12 @@ from json import loads
 from requests import get
 from cloudinary.uploader import upload
 from cloudinary.utils import cloudinary_url
+from flask_googlemaps import Map
+from flask_googlemaps import GoogleMaps
+from flask_googlemaps import get_coordinates
 
+api_key = 'AIzaSyBO_o7kCsu19VyrQd2zKAdJaQL6bORn4ws'
+GoogleMaps(app, key=api_key)
 
 SPOONACULAR_APIKEY = "c917e235c7cd4c389ffc901c220f86d8"
 COMPLEX_SEARCH_URL = "https://api.spoonacular.com/recipes/complexSearch"
@@ -170,12 +175,17 @@ def register():
             email=form.email.data,
             interest=form.interest.data)
         user.set_password(form.password.data)
+        user.lat, user.lng = geo_lookup(user)
         db.session.add(user)
         db.session.commit()
         flash('Congratulations, you are now a registered user!')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
 
+def geo_lookup(user):
+    full_addr = user.address + user.state_province + user.postal_code + user.country
+    result = get_coordinates(GOOGLEMAPS_KEY,full_addr)
+    return result['lat'], result['lng']
 
 @app.route('/user/<username>')
 @login_required
@@ -328,6 +338,39 @@ def messages():
     return render_template('messages.html', messages=messages.items,
                            next_url=next_url, prev_url=prev_url)
 
+@app.route('/map_view')
+def mapview():
+    markers = []
+    offers = Offer.query.all()
+    for offer in offers:
+        markers.append({
+             'icon': 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
+             'lat': offer.author.lat,
+             'lng': offer.author.lng,
+             'infobox': offer.title
+          })
+    # creating a map in the view
+    mymap = Map(
+        identifier="mymap",
+        style=(
+            "height:100%;"
+            "width:100%;"
+            "top:0;"
+            "position:absolute;"
+            "z-index:200;"
+            "zoom: -9999999;"
+        ),
+        # these coordinates re-center the map on Amsterdam
+        lat=52.3675734,
+        lng=4.9041389,
+        markers = markers
+    )
+    return render_template('map_view.html', mymap=mymap, offers=offers, key=api_key)
+
+def geo_lookup(user):
+    full_addr = user.address +" "+ user.state_province +" "+ user.postal_code +" "+ user.country
+    result = get_coordinates(GOOGLEMAPS_KEY,full_addr)
+    return result['lat'], result['lng']
 
 def get_offer(id, check_author=True):
     offer = Offer.query.get(id)

@@ -5,6 +5,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from hashlib import md5
 from time import time
 import jwt
+from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.ext.mutable import MutableDict
 
 
 class User(UserMixin, db.Model):
@@ -21,6 +23,8 @@ class User(UserMixin, db.Model):
     state_province = db.Column(db.String(64))
     country = db.Column(db.String(64))
     interest = db.Column(db.String(128))
+    lat = db.Column(db.Float())
+    lng = db.Column(db.Float())
     offers = db.relationship('Offer', backref='author', lazy='dynamic')
     orders = db.relationship('Order', backref='recipient', lazy='dynamic')
     messages_sent = db.relationship('Message',
