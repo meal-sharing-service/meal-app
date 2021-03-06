@@ -1,8 +1,8 @@
 """init
 
-Revision ID: 08817912ac76
+Revision ID: 2a23bed6a20e
 Revises: 
-Create Date: 2021-03-06 12:27:53.867727
+Create Date: 2021-03-06 21:45:24.127579
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '08817912ac76'
+revision = '2a23bed6a20e'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -32,6 +32,8 @@ def upgrade():
     sa.Column('state_province', sa.String(length=64), nullable=True),
     sa.Column('country', sa.String(length=64), nullable=True),
     sa.Column('interest', sa.String(length=128), nullable=True),
+    sa.Column('lat', sa.Float(), nullable=True),
+    sa.Column('lng', sa.Float(), nullable=True),
     sa.Column('last_message_read_time', sa.DateTime(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
@@ -59,8 +61,8 @@ def upgrade():
     sa.Column('category_id', sa.Integer(), nullable=True),
     sa.Column('request', sa.Boolean(), nullable=True),
     sa.Column('condition', sa.String(length=64), nullable=True),
-    sa.Column('image_public_id', sa.String(length=64), nullable=True),
-    sa.Column('image_thumbnail', sa.String(length=64), nullable=True),
+    sa.Column('image_public_id', sa.String(length=128), nullable=True),
+    sa.Column('image_thumbnail', sa.String(length=128), nullable=True),
     sa.Column('timestamp', sa.DateTime(), nullable=True),
     sa.Column('user_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),

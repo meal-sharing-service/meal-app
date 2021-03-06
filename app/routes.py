@@ -17,7 +17,7 @@ SPOONACULAR_APIKEY = "c917e235c7cd4c389ffc901c220f86d8"
 COMPLEX_SEARCH_URL = "https://api.spoonacular.com/recipes/complexSearch"
 APIKEY_PARAM = "?apikey="+SPOONACULAR_APIKEY
 DEFAULT_SEARCH_BATCH = 10
-
+map_key = app.config['GOOGLEMAPS_KEY']
 
 @app.before_request
 def before_request():
@@ -365,7 +365,7 @@ def mapview():
 
 def geo_lookup(user):
     full_addr = user.address +" "+ user.state_province +" "+ user.postal_code +" "+ user.country
-    result = get_coordinates(GOOGLEMAPS_KEY,full_addr)
+    result = get_coordinates(map_key,full_addr)
     return result['lat'], result['lng']
 
 def get_offer(id, check_author=True):
