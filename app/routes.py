@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for, request
+from flask import render_template, flash, redirect, url_for, request, jsonify
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, EditProfileForm, OfferForm, EmptyForm, ResetPasswordRequestForm, ResetPasswordForm, EditOfferForm, RequestForm, MessageForm
 from app.models import User, Offer, Order, Message
@@ -362,6 +362,14 @@ def mapview():
         markers = markers
     )
     return render_template('map_view.html', mymap=mymap, offers=offers)
+
+@app.route('/api/vi/offers/all', methods=['GET'])
+def api_all():
+    return jsonify([
+    {
+        'id': offer.id, 'title': offer.title, 'desc': offer.body, 'expiration': offer.expiration
+        } for offer in Offer.query.all()
+    ])
 
 def geo_lookup(user):
     full_addr = user.address +" "+ user.state_province +" "+ user.postal_code +" "+ user.country
