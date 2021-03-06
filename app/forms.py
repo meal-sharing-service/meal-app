@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, IntegerField, FloatField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, IntegerField, FloatField, FileField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Length
 from app.models import User
 
@@ -21,6 +21,7 @@ class OfferForm(FlaskForm):
     expiration = StringField('Expiration', validators=[DataRequired()])
     category_id = IntegerField('Category ID (number)')
     condition = StringField('Condition', validators=[DataRequired()])
+    image = FileField('Photo of Food')
     submit = SubmitField('Submit')
 
 class RequestForm(FlaskForm):

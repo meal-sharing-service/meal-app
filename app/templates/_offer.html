@@ -2,7 +2,11 @@
     <tr>
         <td width="70px">
             <a href="{{ url_for('offer', id=offer.id) }}">
-                <img src="{{ offer.author.avatar(70) }}" />
+                {% if offer.image_thumbnail %}
+                <img src="{{ offer.image_thumbnail }}">
+                {% else %}
+                <img src="https://res.cloudinary.com/duqxnurie1/image/upload/c_scale,w_200/v1615004423/default-mss_x7h68r.png">
+                {% endif %}
             </a>
         </td>
         <td>
@@ -10,13 +14,13 @@
                 {{ offer.author.username }}
             </a>
             offers:
-            <p><b>{{ offer.title }}</b></p>
+            <p><h3>{{ offer.title }}</h3></p>
             {% if offer.request == True %}
                 <p>Requested</p>
             {% else %}
                 <p>Shared</p>
             {% endif %}
-            <p>Desc: {{ offer.body }}</p>
+            <p>Description: {{ offer.body }}</p>
             <p>Offer Date: {{ moment(offer.timestamp).format('LLLL') }}</p>
             <p>Remaining Servings: {{ offer.servings - offer.claims }}</p>
             <br>
@@ -39,11 +43,13 @@
                 {{ form.hidden_tag() }}
                 {{ form.submit(value='Unclaim Offer') }}
             </form> 
-            {% else %}
+            {% elif (offer.servings - offer.claims) > 0 %}
             <form action="{{ url_for('claim', id=offer.id) }}" method="post">
                 {{ form.hidden_tag() }}
                 {{ form.submit(value='Claim Offer') }}
-            </form>    
+            </form>
+            {% else %}
+                <h4>All gone!</h4>
             {% endif %}
         </td>
     </tr>
