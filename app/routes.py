@@ -359,33 +359,17 @@ def mapview():
 
 @app.route("/map_try")
 def map_try():
-    # creating a map in the view
-    mymap = Map(
-        identifier="view-side",
-        lat=37.4419,
-        lng=-122.1419,
-        markers=[(37.4419, -122.1419)]
-    )
-    sndmap = Map(
-        identifier="sndmap",
-        lat=37.4419,
-        lng=-122.1419,
-        markers=[
-          {
-             'icon': 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
-             'lat': 37.4419,
-             'lng': -122.1419,
-             'infobox': "<b>Hello World</b>"
-          },
-          {
-             'icon': 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
-             'lat': 37.4300,
-             'lng': -122.1400,
-             'infobox': "<b>Hello World from other place</b>"
-          }
-        ]
-    )
-    return render_template('map_try.html', mymap=mymap, sndmap=sndmap)
+    data = []
+    offers = Offer.query.all()
+    print(offers)
+    for info in offers:
+        data.append({
+            'lat': info.author.lat,
+            'long': info.author.lng,
+            'infobox': info.title
+        })
+    print(data)
+    return render_template('map_try.html', data=data)
 
 
 @app.route('/api/v1/offers/all', methods=['GET'])
