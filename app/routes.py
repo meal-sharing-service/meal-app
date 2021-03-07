@@ -358,7 +358,7 @@ def mapview():
     return render_template('map_view.html', mymap=mymap, offers=offers)
 
 @app.route("/map_try")
-def mapview():
+def mapmap_try():
     # creating a map in the view
     mymap = Map(
         identifier="view-side",
