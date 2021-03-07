@@ -22,7 +22,7 @@ login.login_view = 'login'
 bootstrap = Bootstrap(app)
 mail = Mail(app)
 moment = Moment(app)
-GoogleMaps(app,key = app.config['GOOGLEMAPS_KEY'])
+GoogleMaps(app, key=app.config['GOOGLEMAPS_KEY'])
 
 cloudinary.config(
     cloud_name = app.config['CLOUDINARY_CLOUD_NAME'],

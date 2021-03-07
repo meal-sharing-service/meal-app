@@ -18,6 +18,7 @@ class Config(object):
     CLOUDINARY_API_KEY = os.environ.get('CLOUDINARY_API_KEY')
     CLOUDINARY_API_SECRET = os.environ.get('CLOUDINARY_API_SECRET')
     GOOGLEMAPS_KEY = os.environ.get('GOOGLEMAPS_KEY')
+    SPOONACULAR_APIKEY = os.environ.get('SPOONACULAR_APIKEY')
     TWITTER_API_KEY = os.environ.get('TWITTER_API_KEY')
     TWITTER_API_SECRET = os.environ.get('TWITTER_API_SECRET')
     TWITTER_TOKEN = os.environ.get('TWITTER_TOKEN')
