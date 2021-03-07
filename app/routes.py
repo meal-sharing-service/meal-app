@@ -387,7 +387,10 @@ def to_twitter(offer):
     api = tweepy.API(auth)
 
     tweet = 'NEW OFFER: '+offer.title+', '+offer.body+', servings: '+str(offer.servings)+', expiration: '+str(offer.expiration)+', link: https://meal-sharing-service.herokuapp.com/offer/'+str(offer.id)
-    img_url = offer.image_url
+    if offer.image_url:
+        img_url = offer.image_url
+    else:
+        img_url = "https://res.cloudinary.com/duqxnurie1/image/upload/c_scale,w_200/v1615004423/default-mss_x7h68r.png"
     img_data = requests.get(img_url).content
     with open('image_name.jpg', 'wb') as handler:
         handler.write(img_data)
