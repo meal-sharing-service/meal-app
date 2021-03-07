@@ -3,6 +3,7 @@
 - https://meal-sharing-service.herokuapp.com/
 - https://dashboard.heroku.com/apps/meal-sharing-service
 - https://trello.com/b/jOw7bMdo/meal-sharing-service
+- https://twitter.com/SharingMeal
 
 Auto-deploy to Heroku from Master is ON
 
