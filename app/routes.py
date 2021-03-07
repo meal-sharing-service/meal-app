@@ -360,15 +360,27 @@ def mapview():
 @app.route("/map_try")
 def map_try():
     data = []
-    offers = Offer.query.all()
-    print(offers)
-    for info in offers:
-        data.append({
-            'lat': info.author.lat,
-            'long': info.author.lng,
-            'infobox': info.title
-        })
-    print(data)
+    debug = True
+    if(debug):
+        offers = {1: {'author': {'lat': 52.3675734, 'lng': 4.9041389}, 'title': 'tomato'},
+                  2: {'author': {'lat': 52.3675734, 'lng': 4.906}, 'title': 'potato'},
+                  3: {'author': {'lat': 52.37, 'lng': 4.906}, 'title': 'potato'}}
+        print(offers)
+        for element, info in offers.items():
+            data.append({
+                'lat': info['author']['lat'],
+                'long': info['author']['lng'],
+                'infobox': info['title']
+            })
+        print(data)
+    else:
+        offers = Offer.query.all()
+        for info in offers:
+            data.append({
+                'lat': info.author.lat,
+                'long': info.author.lng,
+                'infobox': info.title
+            })
     return render_template('map_try.html', data=data)
 
 

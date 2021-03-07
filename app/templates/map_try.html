@@ -12,7 +12,7 @@
     function initMap() {
       const map = new google.maps.Map(document.getElementById("map"), {
         zoom: 15,
-        center: myLatLng,
+        center: {lat: data[0]['lat'], lng: data[0]['long']},
       });
       for (i = 0; i < data.length; i++) {
       var latlongpair = {lat: data[i]['lat'], lng: data[i]['long']};
@@ -38,7 +38,7 @@
 </head>
 <body>
 <div class="container">
-    <h1>frustration meal map</h1>
+    <h1>Map of offers</h1>
     <div id="map" style="width:100%; height:500px;"></div>
 </div>
 </body>
