@@ -356,7 +356,7 @@ def mapview():
         markers = markers
     )
     return render_template('map_view.html', mymap=mymap, offers=offers)
-
+"""
 @app.route("/map_try")
 def mapview():
     # creating a map in the view
@@ -387,7 +387,7 @@ def mapview():
     )
     return render_template('example.html', mymap=mymap, sndmap=sndmap)
 
-
+"""
 @app.route('/api/v1/offers/all', methods=['GET'])
 def api_all():
     return jsonify([
