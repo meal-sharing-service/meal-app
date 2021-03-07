@@ -64,14 +64,9 @@ def create_offer():
             request=False, 
             author=current_user)
         if form.image.data:
-            upload_result = upload(form.image.data)
-            offer.image_public_id = upload_result['public_id']
-            offer.image_thumbnail, options = cloudinary_url(
-                    offer.image_public_id,
-                    format="jpg",
-                    crop="fill",
-                    width=200,
-                    height=200)
+            upload_result = upload(form.image.data, 
+                            eager = [{"width": 300, "height": 300, "crop": "fill"}])
+            offer.image_url = upload_result['eager'][0]['secure_url']
         db.session.add(offer)
         db.session.commit()
         to_twitter(offer)
@@ -234,13 +229,7 @@ def offer(id):
     form = EmptyForm()
     offer = get_offer(id,check_author=False)
     user = User.query.filter_by(username=offer.author.username).first
-    offer_image, options = cloudinary_url(
-                    offer.image_public_id,
-                    format="jpg",
-                    crop="fill",
-                    width=300,
-                    height=300)
-    return render_template('offer.html', user=user, offer=offer, form=form, offer_image=offer_image)
+    return render_template('offer.html', user=user, offer=offer, form=form)
 
 
 @app.route('/offer/<id>/update', methods=['GET', 'POST'])
@@ -372,7 +361,7 @@ def mapview():
 def api_all():
     return jsonify([
     {
-        'id': offer.id, 'title': offer.title, 'desc': offer.body, 'expiration': offer.expiration
+        'id': offer.id, 'title': offer.title, 'desc': offer.body, 'expiration': offer.expiration, 'img_url': offer.image_url, 'link': 'https://meal-sharing-service.herokuapp.com/offer/'+str(offer.id)
         } for offer in Offer.query.all()
     ])
 
@@ -382,8 +371,12 @@ def sw():
 
 def geo_lookup(user):
     full_addr = user.address +" "+ user.state_province +" "+ user.postal_code +" "+ user.country
-    result = get_coordinates(map_key,full_addr)
-    return result['lat'], result['lng']
+    try:
+        result = get_coordinates(map_key,full_addr)
+        return result['lat'], result['lng']
+    except:
+        print("Geo lookup error")
+        return 0,0
 
 def to_twitter(offer):
     # Authenticate to Twitter
@@ -394,7 +387,7 @@ def to_twitter(offer):
     api = tweepy.API(auth)
 
     tweet = 'NEW OFFER: '+offer.title+', '+offer.body+', servings: '+str(offer.servings)+', expiration: '+str(offer.expiration)+', link: https://meal-sharing-service.herokuapp.com/offer/'+str(offer.id)
-    img_url = offer.image_thumbnail
+    img_url = offer.image_url
     img_data = requests.get(img_url).content
     with open('image_name.jpg', 'wb') as handler:
         handler.write(img_data)

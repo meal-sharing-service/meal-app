@@ -80,8 +80,7 @@ class Offer(db.Model):
     category_id = db.Column(db.Integer)
     request = db.Column(db.Boolean)
     condition = db.Column(db.String(64))
-    image_public_id = db.Column(db.String(128))
-    image_thumbnail = db.Column(db.String(128))
+    image_url = db.Column(db.String(128))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 

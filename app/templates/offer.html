@@ -15,10 +15,10 @@
     offers:
 </p>
 </td>    
-    {% if offer.image_public_id %}
+    {% if offer.image_url %}
     <br>
     <p>
-    <img src="{{ offer_image }}">
+        <img src="{{ offer.image_url }}">
     </p>
     {% else %}
                 <img src="https://res.cloudinary.com/duqxnurie1/image/upload/c_scale,w_300/v1615004423/default-mss_x7h68r.png">

@@ -2,8 +2,8 @@
     <tr>
         <td width="70px">
             <a href="{{ url_for('offer', id=offer.id) }}">
-                {% if offer.image_thumbnail %}
-                <img src="{{ offer.image_thumbnail }}">
+                {% if offer.image_url %}
+                <img src="{{ offer.image_url }}" width="200" height="200">
                 {% else %}
                 <img src="https://res.cloudinary.com/duqxnurie1/image/upload/c_scale,w_200/v1615004423/default-mss_x7h68r.png">
                 {% endif %}
