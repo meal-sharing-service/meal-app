@@ -397,10 +397,11 @@ def to_twitter(offer):
     media = api.media_upload("image_name.jpg")
     
     try:
-        api.update_status(status=tweet,media_ids=[media.media_id])
+        result = api.update_status(status=tweet,media_ids=[media.media_id])
         print("Tweet OK")
     except:
         print("Error posting tweet")
+        print(result)
 
 def get_offer(id, check_author=True):
     offer = Offer.query.get(id)
