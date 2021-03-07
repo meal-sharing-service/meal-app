@@ -12,6 +12,8 @@ from cloudinary.uploader import upload
 from cloudinary.utils import cloudinary_url
 from flask_googlemaps import Map
 from flask_googlemaps import get_coordinates
+import tweepy
+import requests
 
 SPOONACULAR_APIKEY = "c917e235c7cd4c389ffc901c220f86d8"
 COMPLEX_SEARCH_URL = "https://api.spoonacular.com/recipes/complexSearch"
@@ -72,9 +74,11 @@ def create_offer():
                     height=200)
         db.session.add(offer)
         db.session.commit()
+        to_twitter(offer)
         flash('Your offer is now live!')
         return redirect(url_for('explore'))
     return render_template('create_offer.html', title='Share Food', form=form)
+
 
 
 @app.route('/offer/create_request', methods=['GET', 'POST'])
@@ -94,6 +98,7 @@ def create_request():
             author=current_user)
         db.session.add(offer)
         db.session.commit()
+        to_twitter(offer)
         flash('Your request is now live!')
         return redirect(url_for('explore'))
     return render_template('create_request.html', title='Request Food', form=form)
@@ -375,6 +380,27 @@ def geo_lookup(user):
     full_addr = user.address +" "+ user.state_province +" "+ user.postal_code +" "+ user.country
     result = get_coordinates(map_key,full_addr)
     return result['lat'], result['lng']
+
+def to_twitter(offer):
+    # Authenticate to Twitter
+    auth = tweepy.OAuthHandler(app.config['TWITTER_API_KEY'], 
+    app.config['TWITTER_API_SECRET'])
+    auth.set_access_token(app.config['TWITTER_TOKEN'], 
+    app.config['TWITTER_TOKEN_SECRET'])
+    api = tweepy.API(auth)
+
+    tweet = 'NEW OFFER: '+offer.title+', '+offer.body+', servings: '+str(offer.servings)+', expiration: '+str(offer.expiration)+', link: https://meal-sharing-service.herokuapp.com/offer/'+str(offer.id)
+    img_url = offer.image_thumbnail
+    img_data = requests.get(img_url).content
+    with open('image_name.jpg', 'wb') as handler:
+        handler.write(img_data)
+    media = api.media_upload("image_name.jpg")
+    
+    try:
+        api.update_status(status=tweet,media_ids=[media.media_id])
+        print("Tweet OK")
+    except:
+        print("Error posting tweet")
 
 def get_offer(id, check_author=True):
     offer = Offer.query.get(id)
