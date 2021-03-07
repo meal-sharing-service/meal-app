@@ -3,10 +3,33 @@
 {% block scripts %}
     {{ super() }}
     {{ moment.include_moment() }}
+    <script src="https://code.jquery.com/jquery-3.1.0.js"></script>
 {% endblock %}
 
-{% block title %}
+<!-- {% block title %}
     Welcome to Meal Sharing Service
+{% endblock %} -->
+
+{% block head %}
+    {{ super() }}
+    <title>Meal-Sharing-Service</title>
+    <!-- Basic declarations and Meta descriptions -->
+    <meta charset="utf-8">
+    <link rel="icon" href="{{ url_for('static', filename='images/icon-96.png') }}">
+    <meta name="viewport"    content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="your_pwa_description">
+
+    <!-- Web app manifest -->
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+
+    <!-- iOS -->
+    <link rel="apple-touch-icon"                       href="{{ url_for('static', filename='images/icon-96.png') }}">
+    <meta name="apple-mobile-web-app-capable"          content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection"                      content="telephone=no">
+
+    <!-- Custom CSS -->
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}"> -->
 {% endblock %}
 
 {% block navbar %}
@@ -58,4 +81,6 @@
         {# application content needs to be provided in the app_content block #}
         {% block app_content %}{% endblock %}
     </div>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/install.js') }}"></script>
 {% endblock %}

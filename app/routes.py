@@ -376,6 +376,10 @@ def api_all():
         } for offer in Offer.query.all()
     ])
 
+@app.route('/service-worker.js')
+def sw():
+    return app.send_static_file('service-worker.js'), 200, {'Content-Type': 'text/javascript'}
+
 def geo_lookup(user):
     full_addr = user.address +" "+ user.state_province +" "+ user.postal_code +" "+ user.country
     result = get_coordinates(map_key,full_addr)
