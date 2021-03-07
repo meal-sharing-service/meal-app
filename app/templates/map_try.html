@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
   <head>
-    {{googlemap("my_awesome_map", lat=0.23234234, lng=-0.234234234, markers=[(0.12, -0.45345), ...])}}
+    {{"decoupled-map"|googlemap_js(37.4419, -122.1419, markers=[(37.4419,
+    -122.1419)])}} {{mymap.js}} {{sndmap.js}}
   </head>
   <body>
     <h1>Flask Google Maps Example</h1>
