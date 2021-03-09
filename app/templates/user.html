@@ -22,6 +22,15 @@
                     Send private message
                 </a>
             </p>
+            <p>
+                <button onclick="myFunction()", background-color: #f44336;>report this user</button>
+            </p>
+            <p id="demo"></p>
+            <script>
+                function myFunction() {
+                  document.getElementById("demo").innerHTML = "his user was reported";
+                }
+            </script>
             {% endif %}
         </td>
     </tr>
