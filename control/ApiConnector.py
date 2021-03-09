@@ -13,6 +13,7 @@ class spoonacularApiConnector(ApiConnector):
     def __init__(self, url, number=2, apiKey="?apiKey=e6dd71bc643e4baca4fb9c8cfab6f668"):
         super().__init__(url, number=number)
         self.apiKey = "?apiKey=e6dd71bc643e4baca4fb9c8cfab6f668"
+        self.googlekey = "&key=AIzaSyAQdiYTpNMRveiK7sQxLORH7-xxwi0RNtQ"
 
     def complexSearch(self, query, parameters):
         string = self.url + "recipes/complexSearch" + self.apiKey + "&query=" + query
@@ -25,6 +26,17 @@ class spoonacularApiConnector(ApiConnector):
         response = requests.get(string)
         print("sending request: " + string)
         return response.content
+
+    def geocode(self, address):
+        string = "https://maps.googleapis.com/maps/api/geocode/json?address=" + address +self.googlekey
+        print("sending request: " + string)
+        response = requests.get(string)
+        data = json.loads(response.content.decode("utf-8"))
+        lat = data['results'][0]['geometry']['location']['lat']
+        lng = data['results'][0]['geometry']['location']['lng']
+        print(data['results'][0]['geometry']['location'])
+
+        return lat, lng
 
 
 def main():
@@ -63,9 +75,13 @@ def main():
                 ingredient_ids.append(ing['id'])
                 ingredient_names.append(ing['name'])
 
+
+
     print(ingredient_names)
 
-
+    lat, lng = con.geocode("1095KX+Amsterdam+Netherlands")
+    print(lat)
+    print(lng)
 
 if __name__ == "__main__":
     main()

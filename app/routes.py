@@ -15,7 +15,7 @@ from flask_googlemaps import get_coordinates
 import tweepy
 import requests
 
-SPOONACULAR_APIKEY = "c917e235c7cd4c389ffc901c220f86d8"
+SPOONACULAR_APIKEY = app.config['SPOONACULAR_APIKEY']
 COMPLEX_SEARCH_URL = "https://api.spoonacular.com/recipes/complexSearch"
 APIKEY_PARAM = "?apikey="+SPOONACULAR_APIKEY
 DEFAULT_SEARCH_BATCH = 10
@@ -179,9 +179,21 @@ def register():
     return render_template('register.html', title='Register', form=form)
 
 def geo_lookup(user):
-    full_addr = user.address + user.state_province + user.postal_code + user.country
+    """full_addr = user.address + user.state_province + user.postal_code + user.country
     result = get_coordinates(GOOGLEMAPS_KEY,full_addr)
-    return result['lat'], result['lng']
+    return result['lat'], result['lng']"""
+
+    address = user.address + user.state_province + user.postal_code + user.country
+
+    string = "https://maps.googleapis.com/maps/api/geocode/json?address=" + address + "&key=" + map_key
+    print("sending request: " + string)
+    response = requests.get(string)
+    data = loads(response.content.decode("utf-8"))
+    lat = data['results'][0]['geometry']['location']['lat']
+    lng = data['results'][0]['geometry']['location']['lng']
+    print(data['results'][0]['geometry']['location'])
+
+    return lat, lng
 
 @app.route('/user/<username>')
 @login_required
