@@ -360,7 +360,7 @@ def mapview():
 @app.route("/map_try")
 def map_try():
     data = []
-    debug = True
+    debug = False
     if(debug):
         offers = {1: {'author': {'lat': 52.3675734, 'lng': 4.9041389}, 'title': 'tomato'},
                   2: {'author': {'lat': 52.3675734, 'lng': 4.906}, 'title': 'potato'},
