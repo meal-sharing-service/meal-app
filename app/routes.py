@@ -17,7 +17,7 @@ import requests
 
 SPOONACULAR_APIKEY = app.config['SPOONACULAR_APIKEY']
 COMPLEX_SEARCH_URL = "https://api.spoonacular.com/recipes/complexSearch"
-APIKEY_PARAM = "?apikey="+SPOONACULAR_APIKEY
+APIKEY_PARAM = "?apiKey="+SPOONACULAR_APIKEY
 DEFAULT_SEARCH_BATCH = 10
 map_key = app.config['GOOGLEMAPS_KEY']
 
