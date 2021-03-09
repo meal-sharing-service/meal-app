@@ -64,8 +64,18 @@ def create_offer():
             condition=form.condition.data,
             request=False, 
             author=current_user)
-        id, summary, ingredient_ids, ingredient_names, allergyDict, cuisines, instructions = parse_recipe(offer.title, [
-            "addRecipeInformation=true"])
+        try:
+            print("searching recepy: " + offer.title)
+            id, summary, ingredient_ids, ingredient_names, allergyDict, cuisines, instructions = parse_recipe(offer.title, [
+                "addRecipeInformation=true"])
+            print(allergyDict)
+            offer.set_vegan(allergyDict['vegan'])
+            offer.set_vegetarian(allergyDict['vegetarian'])
+            offer.set_dairyFree(allergyDict['dairyFree'])
+            offer.set_glutenFree(allergyDict['glutenFree'])
+        except:
+            print("recepie not found")
+
         print(allergyDict)
         offer.set_vegan(allergyDict['vegan'])
         offer.set_vegetarian(allergyDict['vegetarian'])
@@ -502,6 +512,7 @@ def search_recipe(query, parameters):
 def parse_recipe(query, parameters):
     response = search_recipe(query, parameters)
     data = loads(response.decode("utf-8"))
+    print(data)
     instructions = ""
     ingredient_ids = []
     ingredient_names = []
