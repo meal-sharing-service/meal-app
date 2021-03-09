@@ -394,7 +394,7 @@ def map_try():
                 'long': info.author.lng,
                 'infobox': info.title
             })
-    return render_template('map_try.html', data=data)
+    return render_template('map_try.html', data=data, center_lat=current_user.lat, center_lng=current_user.lng)
 
 
 @app.route('/api/v1/offers/all', methods=['GET'])
