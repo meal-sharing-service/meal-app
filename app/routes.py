@@ -219,6 +219,7 @@ def edit_profile():
         current_user.state_province=form.state_province.data
         current_user.country=form.country.data
         current_user.email=form.email.data
+        current_user.lat, current_user.lng = geo_lookup(current_user)
         db.session.commit()
         flash('Your changes have been saved.')
         return redirect(url_for('edit_profile'))
@@ -411,8 +412,17 @@ def sw():
 def geo_lookup(user):
     full_addr = user.address +" "+ user.state_province +" "+ user.postal_code +" "+ user.country
     try:
-        result = get_coordinates(map_key,full_addr)
-        return result['lat'], result['lng']
+        address = user.address + user.state_province + user.postal_code + user.country
+
+        string = "https://maps.googleapis.com/maps/api/geocode/json?address=" + address + "&key=" + map_key
+        print("sending request: " + string)
+        response = requests.get(string)
+        data = loads(response.content.decode("utf-8"))
+        lat = data['results'][0]['geometry']['location']['lat']
+        lng = data['results'][0]['geometry']['location']['lng']
+        print(data['results'][0]['geometry']['location'])
+
+        return lat, lng
     except:
         print("Geo lookup error")
         return 0,0
