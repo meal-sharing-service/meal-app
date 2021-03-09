@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, IntegerField, FloatField, FileField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, IntegerField, FloatField, FileField, BooleanField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Length
 from app.models import User
 
@@ -22,6 +22,10 @@ class OfferForm(FlaskForm):
     category_id = IntegerField('Category ID (number)')
     condition = StringField('Condition', validators=[DataRequired()])
     image = FileField('Photo of Food')
+    vegan = BooleanField('vegan')
+    vegetarian = BooleanField('vegetarian')
+    dairyFree = BooleanField('dairy free')
+    glutenFree = BooleanField('gluten free')
     submit = SubmitField('Submit')
 
 class RequestForm(FlaskForm):

@@ -52,6 +52,7 @@ def explore():
 @login_required
 def create_offer():
     form = OfferForm()
+
     if form.validate_on_submit():
         offer = Offer(
             title=form.title.data,
@@ -63,6 +64,13 @@ def create_offer():
             condition=form.condition.data,
             request=False, 
             author=current_user)
+        id, summary, ingredient_ids, ingredient_names, allergyDict, cuisines, instructions = parse_recipe(offer.title, [
+            "addRecipeInformation=true"])
+
+        offer.set_vegan(allergyDict['vegan'])
+        offer.set_vegetarian(allergyDict['vegetarian'])
+        offer.set_dairyFree(allergyDict['dairyFree'])
+        offer.set_glutenFree(allergyDict['glutenFree'])
         if form.image.data:
             upload_result = upload(form.image.data, 
                             eager = [{"width": 300, "height": 300, "crop": "fill"}])
@@ -410,7 +418,6 @@ def sw():
     return app.send_static_file('service-worker.js'), 200, {'Content-Type': 'text/javascript'}
 
 def geo_lookup(user):
-    full_addr = user.address +" "+ user.state_province +" "+ user.postal_code +" "+ user.country
     try:
         address = user.address + user.state_province + user.postal_code + user.country
 
@@ -492,7 +499,8 @@ def search_recipe(query, parameters):
     return response.content
 
 
-def parse_recipe(response):
+def parse_recipe(query, parameters):
+    response = search_recipe(query, parameters)
     data = loads(response.decode("utf-8"))
     instructions = ""
     ingredient_ids = []
