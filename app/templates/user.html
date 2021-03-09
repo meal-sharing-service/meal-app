@@ -23,12 +23,24 @@
                 </a>
             </p>
             <p>
-                <button onclick="myFunction()", background-color: #f44336;>report this user</button>
+                <style type="text/css">
+                    .btn {
+                        background-color:red;
+                        cursor:pointer;
+                        color: white;
+                         padding: 20px 42px;
+                         text-align: center;
+                         text-decoration: none;
+                         display: inline-block;
+                         font-size: 20px;
+                    }
+                </style>
+                <button onclick="myFunction()">report this user</button>
             </p>
             <p id="demo"></p>
             <script>
                 function myFunction() {
-                  document.getElementById("demo").innerHTML = "his user was reported";
+                  document.getElementById("demo").innerHTML = "this user was reported";
                 }
             </script>
             {% endif %}
