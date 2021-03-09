@@ -76,11 +76,6 @@ def create_offer():
         except:
             print("recepie not found")
 
-        print(allergyDict)
-        offer.set_vegan(allergyDict['vegan'])
-        offer.set_vegetarian(allergyDict['vegetarian'])
-        offer.set_dairyFree(allergyDict['dairyFree'])
-        offer.set_glutenFree(allergyDict['glutenFree'])
         if form.image.data:
             upload_result = upload(form.image.data, 
                             eager = [{"width": 300, "height": 300, "crop": "fill"}])
