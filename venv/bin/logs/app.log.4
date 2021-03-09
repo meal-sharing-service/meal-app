@@ -1,0 +1,55 @@
+2021-03-09 05:32:45,779 ERROR: Exception on /explore [GET] [in C:\Users\Hippi\AppData\Local\Programs\Python\Python38-32\lib\site-packages\flask\app.py:1891]
+Traceback (most recent call last):
+  File "C:\Users\Hippi\AppData\Local\Programs\Python\Python38-32\lib\site-packages\sqlalchemy\engine\base.py", line 1276, in _execute_context
+    self.dialect.do_execute(
+  File "C:\Users\Hippi\AppData\Local\Programs\Python\Python38-32\lib\site-packages\sqlalchemy\engine\default.py", line 608, in do_execute
+    cursor.execute(statement, parameters)
+sqlite3.OperationalError: no such table: offer
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Hippi\AppData\Local\Programs\Python\Python38-32\lib\site-packages\flask\app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\Hippi\AppData\Local\Programs\Python\Python38-32\lib\site-packages\flask\app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\Hippi\AppData\Local\Programs\Python\Python38-32\lib\site-packages\flask\app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "C:\Users\Hippi\AppData\Local\Programs\Python\Python38-32\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "C:\Users\Hippi\AppData\Local\Programs\Python\Python38-32\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\Hippi\AppData\Local\Programs\Python\Python38-32\lib\site-packages\flask\app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "D:\Users\Hippi\Desktop\UvACourses\DSCS\meal-app\app\routes.py", line 41, in explore
+    offers = Offer.query.order_by(Offer.timestamp.desc()).paginate(
+  File "C:\Users\Hippi\AppData\Local\Programs\Python\Python38-32\lib\site-packages\flask_sqlalchemy\__init__.py", line 496, in paginate
+    items = self.limit(per_page).offset((page - 1) * per_page).all()
+  File "C:\Users\Hippi\AppData\Local\Programs\Python\Python38-32\lib\site-packages\sqlalchemy\orm\query.py", line 3373, in all
+    return list(self)
+  File "C:\Users\Hippi\AppData\Local\Programs\Python\Python38-32\lib\site-packages\sqlalchemy\orm\query.py", line 3535, in __iter__
+    return self._execute_and_instances(context)
+  File "C:\Users\Hippi\AppData\Local\Programs\Python\Python38-32\lib\site-packages\sqlalchemy\orm\query.py", line 3560, in _execute_and_instances
+    result = conn.execute(querycontext.statement, self._params)
+  File "C:\Users\Hippi\AppData\Local\Programs\Python\Python38-32\lib\site-packages\sqlalchemy\engine\base.py", line 1011, in execute
+    return meth(self, multiparams, params)
+  File "C:\Users\Hippi\AppData\Local\Programs\Python\Python38-32\lib\site-packages\sqlalchemy\sql\elements.py", line 298, in _execute_on_connection
+    return connection._execute_clauseelement(self, multiparams, params)
+  File "C:\Users\Hippi\AppData\Local\Programs\Python\Python38-32\lib\site-packages\sqlalchemy\engine\base.py", line 1124, in _execute_clauseelement
+    ret = self._execute_context(
+  File "C:\Users\Hippi\AppData\Local\Programs\Python\Python38-32\lib\site-packages\sqlalchemy\engine\base.py", line 1316, in _execute_context
+    self._handle_dbapi_exception(
+  File "C:\Users\Hippi\AppData\Local\Programs\Python\Python38-32\lib\site-packages\sqlalchemy\engine\base.py", line 1510, in _handle_dbapi_exception
+    util.raise_(
+  File "C:\Users\Hippi\AppData\Local\Programs\Python\Python38-32\lib\site-packages\sqlalchemy\util\compat.py", line 182, in raise_
+    raise exception
+  File "C:\Users\Hippi\AppData\Local\Programs\Python\Python38-32\lib\site-packages\sqlalchemy\engine\base.py", line 1276, in _execute_context
+    self.dialect.do_execute(
+  File "C:\Users\Hippi\AppData\Local\Programs\Python\Python38-32\lib\site-packages\sqlalchemy\engine\default.py", line 608, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such table: offer
+[SQL: SELECT offer.id AS offer_id, offer.title AS offer_title, offer.body AS offer_body, offer.pickup AS offer_pickup, offer.servings AS offer_servings, offer.claims AS offer_claims, offer.expiration AS offer_expiration, offer.category_id AS offer_category_id, offer.request AS offer_request, offer.condition AS offer_condition, offer.image_url AS offer_image_url, offer.timestamp AS offer_timestamp, offer.user_id AS offer_user_id 
+FROM offer ORDER BY offer.timestamp DESC
+ LIMIT ? OFFSET ?]
+[parameters: (5, 0)]
+(Background on this error at: http://sqlalche.me/e/13/e3q8)
