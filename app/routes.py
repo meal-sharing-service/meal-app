@@ -73,6 +73,10 @@ def create_offer():
             offer.set_vegetarian(allergyDict['vegetarian'])
             offer.set_dairyFree(allergyDict['dairyFree'])
             offer.set_glutenFree(allergyDict['glutenFree'])
+            form.vegan.default=offer.vegan
+            form.vegetarian.default=offer.vegetarian
+            form.dairyFree.default = offer.dairyFree
+            form.glutenFree.default = offer.glutenFree
         except:
             print("recepie not found")
 
