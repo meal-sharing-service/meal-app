@@ -66,7 +66,7 @@ def create_offer():
             author=current_user)
         id, summary, ingredient_ids, ingredient_names, allergyDict, cuisines, instructions = parse_recipe(offer.title, [
             "addRecipeInformation=true"])
-
+        print(allergyDict)
         offer.set_vegan(allergyDict['vegan'])
         offer.set_vegetarian(allergyDict['vegetarian'])
         offer.set_dairyFree(allergyDict['dairyFree'])
