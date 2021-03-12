@@ -43,7 +43,9 @@
             icon: image,
           });
           google.maps.event.addListener(marker, 'click', function() {
-            window.open("https://meal-sharing-service.herokuapp.com/explore#data[i]['id']", "_self");
+            urlstr = https://meal-sharing-service.herokuapp.com/explore#
+            urlstr = urlstr.concat(data[i]['id'])
+            window.open(urlstr, "_self");
          });
           }
     }
