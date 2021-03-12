@@ -46,8 +46,8 @@ def explore():
         if offers.has_prev else None
 
     data = []
-    offers = Offer.query.all()
-    for info in offers:
+    offers2 = Offer.query.all()
+    for info in offers2:
         data.append({
             'lat': info.author.lat,
             'long': info.author.lng,
