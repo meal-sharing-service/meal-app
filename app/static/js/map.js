@@ -1,16 +1,4 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <script type="text/javascript">
-      var search_query = 'some_test';
-       s = document.createElement('script');
-       s.src = "https://maps.googleapis.com/maps/api/js?key=" + {{api_key}} + "&callback=initMap";
-       document.getElementsByTagName('head')[0].appendChild(s);
-  </script>
-  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAQdiYTpNMRveiK7sQxLORH7-xxwi0RNtQ&callback=initMap"
-    type="text/javascript"></script>
-    <script type="text/javascript">
-    var map_markers = [];
+var map_markers = [];
     var data = {{ data | safe}}
     var center_lat = {{ center_lat }}
     var center_lng = {{ center_lng }}
@@ -40,14 +28,3 @@
       });
       }
 }
-
-
-    </script>
-</head>
-<body>
-<div class="container">
-    <h1>Map of offers</h1>
-    <div id="map" style="width:100%; height:500px;"></div>
-</div>
-</body>
-</html>
