@@ -42,13 +42,14 @@
             title: data[i]['title'],
             icon: image,
           });
-          google.maps.event.addListener(marker, 'click', function() {
-            console.log(data);
-            console.log(i);
+           console.log(data);
+           console.log(i);
+           console.log(data.length);
             console.log(data[i]);
             console.log(data[i]['id']);
             urlstr = "https://meal-sharing-service.herokuapp.com/explore#";
             urlstr = urlstr.concat(data[i]['id']);
+          google.maps.event.addListener(marker, 'click', function() {
             window.location.replace(urlstr);
          });
           }
