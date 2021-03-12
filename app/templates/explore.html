@@ -26,6 +26,8 @@
             zoom: 15,
             center: {lat: center_lat, lng: center_lng},
           });
+
+
           for (i = 0; i < data.length; i++) {
           var latlongpair = {lat: data[i]['lat'], lng: data[i]['long']};
           console.log(latlongpair);
@@ -46,9 +48,13 @@
             urlstr = "https://meal-sharing-service.herokuapp.com/explore#";
             urlstr = urlstr.concat(data[i]['id']);
             console.log(urlstr)
-          google.maps.event.addListener(marker, 'click', function(urlstr) {
-            window.location.replace(urlstr);
-         })(urlstr);
+
+          google.maps.event.addListener(marker, 'click', (function( stri ){
+              return function(e){
+                e.preventDefault();
+               window.location.replace(stri);
+              };
+          })( urlstr ), 'false' );
           }
     }
 
