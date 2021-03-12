@@ -50,8 +50,7 @@
             console.log(urlstr);
 
           google.maps.event.addListener(marker, 'click', (function( stri ){
-              return function(e){
-                e.preventDefault();
+              return function(){
                 console.log(stri);
                window.location.replace(stri);
               };

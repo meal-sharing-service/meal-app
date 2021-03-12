@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for, request, jsonify
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, EditProfileForm, OfferForm, EmptyForm, ResetPasswordRequestForm, ResetPasswordForm, EditOfferForm, RequestForm, MessageForm
+from app.forms import LoginForm, RegistrationForm, EditProfileForm, OfferForm, EmptyForm, ResetPasswordRequestForm, ResetPasswordForm, EditOfferForm, RequestForm, MessageForm, OfferInfoForm
 from app.models import User, Offer, Order, Message
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
@@ -93,6 +93,49 @@ def create_offer():
 
         if form.image.data:
             upload_result = upload(form.image.data, 
+                            eager = [{"width": 300, "height": 300, "crop": "fill"}])
+            offer.image_url = upload_result['eager'][0]['secure_url']
+        db.session.add(offer)
+        db.session.commit()
+        to_twitter(offer)
+        flash('Your offer is now live!')
+        return redirect(url_for('explore'))
+    return render_template('create_offer.html', title='Share Food', form=form)
+
+@app.route('/offer/add_offer_info', methods=['GET', 'POST'])
+@login_required
+def add_offer_info():
+    form = OfferInfoForm()
+
+    if form.validate_on_submit():
+        offer = Offer(
+            title=form.title.data,
+            body=form.body.data,
+            pickup=form.pickup.data,
+            servings=form.servings.data,
+            expiration=form.expiration.data,
+            category_id=form.category_id.data,
+            condition=form.condition.data,
+            request=False,
+            author=current_user)
+        try:
+            print("searching recepy: " + offer.title)
+            id, summary, ingredient_ids, ingredient_names, allergyDict, cuisines, instructions = parse_recipe(offer.title, [
+                "addRecipeInformation=true"])
+            print(allergyDict)
+            offer.set_vegan(allergyDict['vegan'])
+            offer.set_vegetarian(allergyDict['vegetarian'])
+            offer.set_dairyFree(allergyDict['dairyFree'])
+            offer.set_glutenFree(allergyDict['glutenFree'])
+            form.vegan.default=offer.vegan
+            form.vegetarian.default=offer.vegetarian
+            form.dairyFree.default = offer.dairyFree
+            form.glutenFree.default = offer.glutenFree
+        except:
+            print("recepie not found")
+
+        if form.image.data:
+            upload_result = upload(form.image.data,
                             eager = [{"width": 300, "height": 300, "crop": "fill"}])
             offer.image_url = upload_result['eager'][0]['secure_url']
         db.session.add(offer)
