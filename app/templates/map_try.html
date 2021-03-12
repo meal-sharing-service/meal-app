@@ -33,12 +33,16 @@
       });
 
       const image ="static/images/mealappicon.png";
-      new google.maps.Marker({
+      var marker = new google.maps.Marker({
         position: latlongpair,
         map,
         title: data[i]['title'],
         icon: image,
       });
+
+      google.maps.event.addListener(marker, 'click', function() {
+        window.open("https://meal-sharing-service.herokuapp.com/explore");
+     });
       }
 }
 
