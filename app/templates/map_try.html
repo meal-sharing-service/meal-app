@@ -5,7 +5,7 @@
       var search_query = 'some_test';
        s = document.createElement('script');
        str1 = "https://maps.googleapis.com/maps/api/js?key="
-       str2 = str1.concat({{api_key}})
+       str2 = str1.concat("{{api_key}}")
        str3 = str2.concat("&callback=initMap")
        s.src = str3;
        document.getElementsByTagName('head')[0].appendChild(s);
