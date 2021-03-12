@@ -49,6 +49,7 @@ def explore():
     offers2 = Offer.query.all()
     for info in offers2:
         data.append({
+            'id': info.id,
             'lat': info.author.lat,
             'long': info.author.lng,
             'infobox': info.title
