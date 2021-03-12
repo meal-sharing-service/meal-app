@@ -1,7 +1,14 @@
 {% extends "base.html" %}
 
-  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAQdiYTpNMRveiK7sQxLORH7-xxwi0RNtQ&callback=initMap"
-    type="text/javascript"></script>
+  <script type="text/javascript">
+      var search_query = 'some_test';
+       s = document.createElement('script');
+       str1 = "https://maps.googleapis.com/maps/api/js?key="
+       str2 = str1.concat("{{api_key}}")
+       str3 = str2.concat("&callback=initMap")
+       s.src = str3;
+       document.getElementsByTagName('head')[0].appendChild(s);
+  </script>
     <script type="text/javascript">
     var map_markers = [];
     var data = {{ data | safe}}
@@ -25,12 +32,15 @@
       });
 
       const image ="static/images/mealappicon.png";
-      new google.maps.Marker({
+      var marker = new google.maps.Marker({
         position: latlongpair,
         map,
         title: data[i]['title'],
         icon: image,
       });
+      google.maps.event.addListener(marker, 'click', function() {
+        window.open("https://meal-sharing-service.herokuapp.com/explore");
+     });
       }
 }
 

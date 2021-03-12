@@ -44,8 +44,18 @@ def explore():
         if offers.has_next else None
     prev_url = url_for('explore', page=offers.prev_num) \
         if offers.has_prev else None
+
+    data = []
+    offers = Offer.query.all()
+    for info in offers:
+        data.append({
+            'lat': info.author.lat,
+            'long': info.author.lng,
+            'infobox': info.title
+        })
+
     return render_template('explore.html', title='Explore', offers=offers.items, form=form, 
-                            next_url=next_url, prev_url=prev_url)
+                            next_url=next_url, prev_url=prev_url, data=data, center_lat=current_user.lat, center_lng=current_user.lng, api_key=map_key)
 
 
 @app.route('/offer/create_offer', methods=['GET', 'POST'])
