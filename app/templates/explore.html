@@ -45,6 +45,7 @@
             console.log(data[i]['id']);
             urlstr = "https://meal-sharing-service.herokuapp.com/explore#";
             urlstr = urlstr.concat(data[i]['id']);
+            console.log(urlstr)
           google.maps.event.addListener(marker, 'click', function() {
             window.location.replace(urlstr);
          });
