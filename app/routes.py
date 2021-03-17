@@ -111,6 +111,20 @@ def add_offer_info():
     dairyFree = allergyDict['dairyFree']
     glutenFree = allergyDict['glutenFree']
 
+    ingstr = ""
+    for ingredient in ingredient_names:
+        if ingstr == "":
+            ingstr = ingredient
+        else:
+            ingstr = ingstr + ", " + ingredient
+
+    cuisinestr = ""
+    for cuisine in ingredient_names:
+        if cuisine == "":
+            cuisine = cuisinestr
+        else:
+            cuisine = cuisinestr + ", " + cuisine
+
     form = OfferInfoForm()
 
     form.vegan.data = vega
@@ -118,8 +132,8 @@ def add_offer_info():
     form.dairyFree.data = dairyFree
     form.glutenFree.data = glutenFree
     form.body.data = summary
-    form.ingredients.data = ingredient_names
-    form.cuisine.data = cuisines
+    form.ingredients.data = ingstr
+    form.cuisine.data = cuisinestr
 
     if form.validate_on_submit():
         offer = Offer(
