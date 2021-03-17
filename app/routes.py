@@ -83,7 +83,7 @@ def create_offer():
 @app.route('/offer/add_offer_info', methods=['GET', 'POST'])
 @login_required
 def add_offer_info():
-    print("in offerinfo")
+    print("in offerinfo with session:" + str(session['title']))
     vega = True
     veg = True
     dairyFree= True
