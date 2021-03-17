@@ -73,7 +73,6 @@ def create_offer():
         session['category_id'] = form.category_id.data
         session['condition'] = form.condition.data
         session['request'] = False
-        session['author'] = current_user
 
         flash('Please add some more information!')
 
@@ -84,7 +83,7 @@ def create_offer():
 @app.route('/offer/add_offer_info', methods=['GET', 'POST'])
 @login_required
 def add_offer_info():
-    print("in")
+    print("in offerinfo")
     vega = True
     veg = True
     dairyFree= True
