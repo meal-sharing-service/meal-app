@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for, request, jsonify
+from flask import render_template, flash, redirect, url_for, request, jsonify, session
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, EditProfileForm, OfferForm, EmptyForm, ResetPasswordRequestForm, ResetPasswordForm, EditOfferForm, RequestForm, MessageForm, OfferInfoForm
 from app.models import User, Offer, Order, Message
@@ -63,50 +63,56 @@ def explore():
 @login_required
 def create_offer():
     form = OfferForm()
-
+    data = {}
     if form.validate_on_submit():
-        offer = Offer(
-            title=form.title.data,
-            body=form.body.data,
-            pickup=form.pickup.data,
-            servings=form.servings.data,
-            expiration=form.expiration.data,
-            category_id=form.category_id.data,
-            condition=form.condition.data,
-            request=False, 
-            author=current_user)
-        try:
-            print("searching recepy: " + offer.title)
-            id, summary, ingredient_ids, ingredient_names, allergyDict, cuisines, instructions = parse_recipe(offer.title, [
-                "addRecipeInformation=true"])
-            print(allergyDict)
-            offer.set_vegan(allergyDict['vegan'])
-            offer.set_vegetarian(allergyDict['vegetarian'])
-            offer.set_dairyFree(allergyDict['dairyFree'])
-            offer.set_glutenFree(allergyDict['glutenFree'])
-            form.vegan.default=offer.vegan
-            form.vegetarian.default=offer.vegetarian
-            form.dairyFree.default = offer.dairyFree
-            form.glutenFree.default = offer.glutenFree
-        except:
-            print("recepie not found")
 
-        if form.image.data:
-            upload_result = upload(form.image.data, 
-                            eager = [{"width": 300, "height": 300, "crop": "fill"}])
-            offer.image_url = upload_result['eager'][0]['secure_url']
-        db.session.add(offer)
-        db.session.commit()
-        to_twitter(offer)
-        flash('Your offer is now live!')
-        return redirect(url_for('explore'))
+        data = {
+            'title': form.title.data,
+            'pickup': form.pickup.data,
+            'servings': form.servings.data,
+            'expiration': form.expiration.data,
+            'category_id': form.category_id.data,
+            'condition': form.condition.data,
+            'request': False,
+            'author': current_user}
+
+        flash('Please add some more information!')
+
+        session['offer_data'] = data
+        return redirect(url_for('offer/add_offer_info.html'))
     return render_template('create_offer.html', title='Share Food', form=form)
 
 @app.route('/offer/add_offer_info', methods=['GET', 'POST'])
 @login_required
 def add_offer_info():
+
+    vega = True
+    veg = True
+    dairyFree= True
+    glutenFree = True
+    try:
+        data = session['offer_data']
+        session.pop('offer_data', None)
+        title = data['title']
+        print("searching recepy: " + data['title'])
+        id, summary, ingredient_ids, ingredient_names, allergyDict, cuisines, instructions = parse_recipe(title, [
+            "addRecipeInformation=true"])
+        print(allergyDict)
+        vega = allergyDict['vegan']
+        veg = allergyDict['vegetarian']
+        dairyFree = allergyDict['dairyFree']
+        glutenFree = allergyDict['glutenFree']
+
+    except:
+        print("recepie not found")
+
     form = OfferInfoForm()
 
+    form.vegan.data = vega
+    form.vegetarian.data = veg
+    form.dairyFree.data = dairyFree
+    form.glutenFree.data = glutenFree
+    
     if form.validate_on_submit():
         offer = Offer(
             title=form.title.data,
@@ -118,21 +124,10 @@ def add_offer_info():
             condition=form.condition.data,
             request=False,
             author=current_user)
-        try:
-            print("searching recepy: " + offer.title)
-            id, summary, ingredient_ids, ingredient_names, allergyDict, cuisines, instructions = parse_recipe(offer.title, [
-                "addRecipeInformation=true"])
-            print(allergyDict)
-            offer.set_vegan(allergyDict['vegan'])
-            offer.set_vegetarian(allergyDict['vegetarian'])
-            offer.set_dairyFree(allergyDict['dairyFree'])
-            offer.set_glutenFree(allergyDict['glutenFree'])
-            form.vegan.default=offer.vegan
-            form.vegetarian.default=offer.vegetarian
-            form.dairyFree.default = offer.dairyFree
-            form.glutenFree.default = offer.glutenFree
-        except:
-            print("recepie not found")
+        offer.set_vegan(vega)
+        offer.set_vegetarian(veg)
+        offer.set_dairyFree(dairyFree)
+        offer.set_glutenFree(glutenFree)
 
         if form.image.data:
             upload_result = upload(form.image.data,

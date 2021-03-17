@@ -33,8 +33,7 @@ class OfferForm(FlaskForm):
 
 
 class OfferInfoForm(FlaskForm):
-    body = TextAreaField('Description', validators=[
-        DataRequired(), Length(min=1, max=140)])
+    body = TextAreaField('Description', validators=[DataRequired(), Length(min=1, max=140)])
     image = FileField('Photo of Food')
     vegan = BooleanField('vegan')
     vegetarian = BooleanField('vegetarian')
