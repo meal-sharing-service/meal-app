@@ -139,14 +139,14 @@ def add_offer_info():
 
     if form.validate_on_submit():
         offer = Offer(
-            title=form.title.data,
+            title=data['title'],
             body=form.body.data,
-            pickup=form.pickup.data,
-            servings=form.servings.data,
-            expiration=form.expiration.data,
-            category_id=form.category_id.data,
-            condition=form.condition.data,
-            request=False,
+            pickup=data['pickup'],
+            servings=data['servings'],
+            expiration=data['expiration'],
+            category_id=data['category_id'],
+            condition=data['condition'],
+            request=data['request'],
             author=current_user)
         offer.set_vegan(vega)
         offer.set_vegetarian(veg)
@@ -584,15 +584,15 @@ def search_recipe(query, parameters):
 def parse_recipe(query, parameters):
     response = search_recipe(query, parameters)
     data = loads(response.decode("utf-8"))
-    print(data)
+    #print(data)
     instructions = ""
     ingredient_ids = []
     ingredient_names = []
     cuisines = data['results'][0]['cuisines']
     id = data['results'][0]['id']
     summary = data['results'][0]['summary']
-    print(summary)
-    print(cuisines)
+    #print(summary)
+    #print(cuisines)
 
     for inst in data['results'][0]['analyzedInstructions'][0]['steps']:
         instructions = instructions + inst['step']
@@ -600,7 +600,7 @@ def parse_recipe(query, parameters):
             if ing['id'] not in ingredient_ids:
                 ingredient_ids.append(ing['id'])
                 ingredient_names.append(ing['name'])
-    print(ingredient_names)
+    #print(ingredient_names)
     vegetarian = data['results'][0]['vegetarian']
     vegan = data['results'][0]['vegan']
     glutenFree = data['results'][0]['glutenFree']
