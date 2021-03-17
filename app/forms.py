@@ -39,7 +39,10 @@ class OfferInfoForm(FlaskForm):
     vegetarian = BooleanField('vegetarian')
     dairyFree = BooleanField('dairy free')
     glutenFree = BooleanField('gluten free')
+    ingredients = TextAreaField('Ingredients')
+    cuisine = TextAreaField('Cuisine')
     submit = SubmitField('Submit')
+
 
 
 class RequestForm(FlaskForm):

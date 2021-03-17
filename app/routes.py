@@ -112,7 +112,10 @@ def add_offer_info():
     form.vegetarian.data = veg
     form.dairyFree.data = dairyFree
     form.glutenFree.data = glutenFree
-    
+    form.body = summary
+    form.ingredients = ingredient_names
+    form.cuisine = cuisines
+
     if form.validate_on_submit():
         offer = Offer(
             title=form.title.data,
