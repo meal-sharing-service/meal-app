@@ -62,7 +62,6 @@ def explore():
 @app.route('/offer/create_offer', methods=['GET', 'POST'])
 @login_required
 def create_offer():
-    return redirect(url_for('add_offer_info'))
     form = OfferForm()
     data = {}
     if form.validate_on_submit():
@@ -87,7 +86,7 @@ def create_offer():
 @app.route('/offer/add_offer_info', methods=['GET', 'POST'])
 @login_required
 def add_offer_info():
-
+    print("in")
     vega = True
     veg = True
     dairyFree= True
