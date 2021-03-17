@@ -62,6 +62,7 @@ def explore():
 @app.route('/offer/create_offer', methods=['GET', 'POST'])
 @login_required
 def create_offer():
+    return redirect(url_for('add_offer_info'))
     form = OfferForm()
     data = {}
     if form.validate_on_submit():
