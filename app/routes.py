@@ -98,8 +98,7 @@ def add_offer_info():
         'expiration': session['expiration'],
         'category_id': session['category_id'],
         'condition': session['condition'],
-        'request': session['request'],
-        'author': session['author']}
+        'request': session['request']}
 
     session.pop('offer_data', None)
     title = data['title']
