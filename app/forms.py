@@ -16,19 +16,18 @@ class EmptyForm(FlaskForm):
 
 class OfferForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
-    body = TextAreaField('Description', validators=[
-        DataRequired(), Length(min=1, max=140)])
+    #body = TextAreaField('Description', validators=[DataRequired(), Length(min=1, max=140)])
     pickup = TextAreaField('Pickup Instructions', validators=[
         DataRequired(), Length(min=1, max=140)])   
     servings = IntegerField('Servings Offered', validators=[DataRequired()])
     expiration = StringField('Expiration', validators=[DataRequired()])
     category_id = IntegerField('Category ID (number)')
     condition = StringField('Condition', validators=[DataRequired()])
-    image = FileField('Photo of Food')
-    vegan = BooleanField('vegan')
-    vegetarian = BooleanField('vegetarian')
-    dairyFree = BooleanField('dairy free')
-    glutenFree = BooleanField('gluten free')
+    #image = FileField('Photo of Food')
+    #vegan = BooleanField('vegan')
+    #vegetarian = BooleanField('vegetarian')
+    #dairyFree = BooleanField('dairy free')
+    #glutenFree = BooleanField('gluten free')
     submit = SubmitField('Submit')
 
 
