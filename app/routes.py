@@ -111,6 +111,8 @@ def add_offer_info():
     dairyFree = allergyDict['dairyFree']
     glutenFree = allergyDict['glutenFree']
 
+    if len(summary) > 140:
+        summary = summary[:140]
     ingstr = ""
     for ingredient in ingredient_names:
         if ingstr == "":
