@@ -79,7 +79,7 @@ def create_offer():
         flash('Please add some more information!')
 
         session['offer_data'] = data
-        return redirect(url_for('offer/add_offer_info'))
+        return redirect(url_for('add_offer_info'))
     return render_template('create_offer.html', title='Share Food', form=form)
 
 @app.route('/offer/add_offer_info', methods=['GET', 'POST'])
