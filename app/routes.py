@@ -121,11 +121,11 @@ def add_offer_info():
             ingstr = ingstr + ", " + ingredient
 
     cuisinestr = ""
-    for cuisine in ingredient_names:
-        if cuisine == "":
-            cuisine = cuisinestr
+    for cuisine in cuisines:
+        if cuisinestr == "":
+            cuisinestr = cuisine
         else:
-            cuisine = cuisinestr + ", " + cuisine
+            cuisinestr = cuisinestr + ", " + cuisine
 
     form = OfferInfoForm()
 
