@@ -91,6 +91,10 @@ def add_offer_info():
     veg = True
     dairyFree= True
     glutenFree = True
+    summary = ""
+    ingredient_names = ""
+    cuisines = ""
+
     try:
         data = session['offer_data']
         session.pop('offer_data', None)

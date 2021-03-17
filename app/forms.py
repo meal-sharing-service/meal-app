@@ -28,7 +28,7 @@ class OfferForm(FlaskForm):
     #vegetarian = BooleanField('vegetarian')
     #dairyFree = BooleanField('dairy free')
     #glutenFree = BooleanField('gluten free')
-    submit = SubmitField('Submit')
+    submit = SubmitField('Next')
 
 
 class OfferInfoForm(FlaskForm):
