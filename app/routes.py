@@ -91,31 +91,26 @@ def add_offer_info():
     summary = ""
     ingredient_names = ""
     cuisines = ""
+    data = {
+        'title': session['title'],
+        'pickup': session['pickup'],
+        'servings': session['servings'],
+        'expiration': session['expiration'],
+        'category_id': session['category_id'],
+        'condition': session['condition'],
+        'request': session['request'],
+        'author': session['author']}
 
-    try:
-        data = {
-            'title': session['title'],
-            'pickup': session['pickup'],
-            'servings': session['servings'],
-            'expiration': session['expiration'],
-            'category_id': session['category_id'],
-            'condition': session['condition'],
-            'request': session['request'],
-            'author': session['author']}
-
-        session.pop('offer_data', None)
-        title = data['title']
-        print("searching recepy: " + data['title'])
-        id, summary, ingredient_ids, ingredient_names, allergyDict, cuisines, instructions = parse_recipe(title, [
-            "addRecipeInformation=true"])
-        print(allergyDict)
-        vega = allergyDict['vegan']
-        veg = allergyDict['vegetarian']
-        dairyFree = allergyDict['dairyFree']
-        glutenFree = allergyDict['glutenFree']
-
-    except:
-        print("recepie not found")
+    session.pop('offer_data', None)
+    title = data['title']
+    print("searching recepy: " + data['title'])
+    id, summary, ingredient_ids, ingredient_names, allergyDict, cuisines, instructions = parse_recipe(title, [
+        "addRecipeInformation=true"])
+    print(allergyDict)
+    vega = allergyDict['vegan']
+    veg = allergyDict['vegetarian']
+    dairyFree = allergyDict['dairyFree']
+    glutenFree = allergyDict['glutenFree']
 
     form = OfferInfoForm()
 
