@@ -66,19 +66,17 @@ def create_offer():
     data = {}
     if form.validate_on_submit():
 
-        data = {
-            'title': form.title.data,
-            'pickup': form.pickup.data,
-            'servings': form.servings.data,
-            'expiration': form.expiration.data,
-            'category_id': form.category_id.data,
-            'condition': form.condition.data,
-            'request': False,
-            'author': current_user}
+        session['title'] = form.title.data
+        session['pickup'] = form.pickup.data
+        session['servings'] = form.servings.data
+        session['expiration'] = form.expiration.data
+        session['category_id'] = form.category_id.data
+        session['condition'] = form.condition.data
+        session['request'] = False
+        session['author'] = current_user
 
         flash('Please add some more information!')
 
-        session['offer_data'] = data
         print(session)
         return redirect(url_for('add_offer_info'))
     return render_template('create_offer.html', title='Share Food', form=form)
@@ -96,7 +94,16 @@ def add_offer_info():
     cuisines = ""
 
     try:
-        data = session['offer_data']
+        data = {
+            'title': session['title'],
+            'pickup': session['pickup'],
+            'servings': session['servings'],
+            'expiration': session['expiration'],
+            'category_id': session['category_id'],
+            'condition': session['condition'],
+            'request': session['request'],
+            'author': session['author']}
+
         session.pop('offer_data', None)
         title = data['title']
         print("searching recepy: " + data['title'])
