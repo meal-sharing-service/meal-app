@@ -12,6 +12,7 @@ from cloudinary.uploader import upload
 from cloudinary.utils import cloudinary_url
 from flask_googlemaps import Map
 from flask_googlemaps import get_coordinates
+import geopy.distance
 import tweepy
 import requests
 
@@ -33,7 +34,6 @@ def before_request():
 def index():
     return render_template('index.html')
 
-
 @app.route('/explore')
 def explore():
     form = EmptyForm()
@@ -45,17 +45,24 @@ def explore():
     prev_url = url_for('explore', page=offers.prev_num) \
         if offers.has_prev else None
 
+    maxdist = request.args.get('distance', default=500, type=int)
+    vegan = request.args.get('vegan', default=0, type=int)
+
     data = []
     offers2 = Offer.query.all()
 
     for info in offers2:
+        c1 = (info.author.lat, info.author.lng)
+        c2 = (current_user.lat, current_user.lng)
+        distance = geopy.distance.vincenty(c1, c2).km
         if info.timestamp > (datetime.today() - timedelta(days=1)):
-            data.append({
-                'id': info.id,
-                'lat': info.author.lat,
-                'long': info.author.lng,
-                'infobox': info.title
-            })
+            if info.vegan is vegan and distance < maxdist:
+                data.append({
+                    'id': info.id,
+                    'lat': info.author.lat,
+                    'long': info.author.lng,
+                    'infobox': info.title
+                })
         else:
             delete(info.id)
 
@@ -364,6 +371,7 @@ def update(id):
 @login_required
 def delete(id):
     form = EmptyForm()
+    print("id:" +str(id))
     offer = get_offer(id)
     if form.validate_on_submit():
         db.session.delete(offer)
