@@ -4,7 +4,7 @@ from app.forms import LoginForm, RegistrationForm, EditProfileForm, OfferForm, E
 from app.models import User, Offer, Order, Message
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
-from datetime import datetime
+from datetime import datetime, timedelta
 from app.email import send_password_reset_email
 from json import loads
 from requests import get
@@ -47,13 +47,17 @@ def explore():
 
     data = []
     offers2 = Offer.query.all()
+
     for info in offers2:
-        data.append({
-            'id': info.id,
-            'lat': info.author.lat,
-            'long': info.author.lng,
-            'infobox': info.title
-        })
+        if info.timestamp > (datetime.today() - timedelta(days=1)):
+            data.append({
+                'id': info.id,
+                'lat': info.author.lat,
+                'long': info.author.lng,
+                'infobox': info.title
+            })
+        else:
+            delete(info.id)
 
     return render_template('explore.html', title='Explore', offers=offers.items, form=form, 
                             next_url=next_url, prev_url=prev_url, data=data, center_lat=current_user.lat, center_lng=current_user.lng, api_key=map_key)
