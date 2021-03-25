@@ -65,11 +65,17 @@ def explore():
                 })
         else:
             print("deleting; " + str(info.id))
-            delete(info.id)
+            purge(info.id)
 
     return render_template('explore.html', title='Explore', offers=offers.items, form=form, 
                             next_url=next_url, prev_url=prev_url, data=data, center_lat=current_user.lat, center_lng=current_user.lng, api_key=map_key)
 
+def purge(id):
+    print("id:" + str(id))
+    offerinquestion = get_offer(id)
+    db.session.delete(offerinquestion)
+    db.session.commit()
+    flash('Offer deleted.')
 
 @app.route('/offer/create_offer', methods=['GET', 'POST'])
 @login_required
@@ -366,7 +372,6 @@ def update(id):
         form.category_id.data = offer.category_id
         form.condition.data = offer.condition
     return render_template('update_offer.html', form=form, offer=offer)
-
 
 @app.route('/offer/<id>/delete', methods=['POST'])
 @login_required
