@@ -60,7 +60,7 @@ def explore():
     offers = Offer.query.order_by(Offer.timestamp.desc()).paginate(
         page, app.config['OFFERS_PER_PAGE'], False)
 
-    for info in offers:
+    for info in offers.items:
         c1 = (info.author.lat, info.author.lng)
         c2 = (current_user.lat, current_user.lng)
         distance = geopy.distance.geodesic(c1, c2).km
