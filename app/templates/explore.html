@@ -66,17 +66,8 @@
     <form id="form" action="explore.html">
         <input type="text" id="vega" /> VEGAN
         <input type="text" id="dist" /> Distance
-        <input type="submit" onclick="filterme();" />
+        <input type="submit" onclick="location.href='\explore.php?vegan='+ document.getElementById('vega').value+'&distance='+document.getElementById('dist').value;"/>
     </form>
-    <script type="text/javascript">
-    function filterme() {
-        var vegan = document.getElementById("vega").value;
-        var dista = document.getElementById("dist").value;
-        alert(input);
-    }
-    </script>
-    <a class="btn btn-primary" href="{{ url_for('create_offer') }}" role="button">Share Food</a>
-    <a class="btn btn-primary" href="/explore?vegan=1" role="button">vegan</a>
     <h2>Current Offers</h2>
     {% for offer in offers %}
         {% include '_offer.html' %}

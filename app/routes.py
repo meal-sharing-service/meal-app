@@ -64,6 +64,7 @@ def explore():
                     'infobox': info.title
                 })
         else:
+            print("deleting; " + str(info.id))
             delete(info.id)
 
     return render_template('explore.html', title='Explore', offers=offers.items, form=form, 
