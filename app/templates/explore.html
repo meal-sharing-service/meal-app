@@ -63,11 +63,11 @@
 
     <div id="map" style="width:100%; height:500px;"></div>
     <h2>Filter Offers</h2>
-    <form id="form" action="explore">
+
         <input type="text" id="vega" /> VEGAN
         <input type="text" id="dist" /> Distance
         <input type="submit" onclick="location.href='\explore?vegan='+ document.getElementById('vega').value+'&distance='+document.getElementById('dist').value;"/>
-    </form>
+
     <h2>Current Offers</h2>
     {% for offer in offers %}
         {% include '_offer.html' %}
