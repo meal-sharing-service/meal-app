@@ -44,7 +44,10 @@ def explore():
 
     maxdist = request.args.get('distance', default=500, type=int)
     vegan = request.args.get('vegan', default=False, type=bool)
+
     vegani = False
+    print(vegan=="true")
+    print(vegan)
     if vegan == "true" or vegan == "True" or vegan == "1":
         vegani = True
     else:
