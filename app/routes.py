@@ -38,25 +38,15 @@ def index():
 def explore():
     form = EmptyForm()
     page = request.args.get('page', 1, type=int)
-    offers = Offer.query.order_by(Offer.timestamp.desc()).paginate(
-        page, app.config['OFFERS_PER_PAGE'], False)
-    next_url = url_for('explore', page=offers.next_num) \
-        if offers.has_next else None
-    prev_url = url_for('explore', page=offers.prev_num) \
-        if offers.has_prev else None
+
+    offers2 = Offer.query.all()
+    data = []
 
     maxdist = request.args.get('distance', default=500, type=int)
     vegan = request.args.get('vegan', default=0, type=int)
 
-    data = []
-    offers2 = Offer.query.all()
-
     for info in offers2:
-        c1 = (info.author.lat, info.author.lng)
-        c2 = (current_user.lat, current_user.lng)
-        distance = geopy.distance.geodesic(c1, c2).km
         if info.timestamp > (datetime.today() - timedelta(days=1)):
-            if info.vegan is vegan and distance < maxdist:
                 data.append({
                     'id': info.id,
                     'lat': info.author.lat,
@@ -66,6 +56,21 @@ def explore():
         else:
             print("deleting; " + str(info.id))
             purge(info.id)
+
+    offers = Offer.query.order_by(Offer.timestamp.desc()).paginate(
+        page, app.config['OFFERS_PER_PAGE'], False)
+
+    for info in offers:
+        c1 = (info.author.lat, info.author.lng)
+        c2 = (current_user.lat, current_user.lng)
+        distance = geopy.distance.geodesic(c1, c2).km
+        if info.vegan is vegan and distance < maxdist:
+            offers.remove(info)
+
+    next_url = url_for('explore', page=offers.next_num) \
+        if offers.has_next else None
+    prev_url = url_for('explore', page=offers.prev_num) \
+        if offers.has_prev else None
 
     return render_template('explore.html', title='Explore', offers=offers.items, form=form, 
                             next_url=next_url, prev_url=prev_url, data=data, center_lat=current_user.lat, center_lng=current_user.lng, api_key=map_key)
