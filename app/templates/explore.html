@@ -62,7 +62,9 @@
         </script>
 
     <div id="map" style="width:100%; height:500px;"></div>
-
+    <h2>Filter Offers</h2>
+    <a class="btn btn-primary" href="{{ url_for('create_offer') }}" role="button">Share Food</a>
+    <a class="btn btn-primary" href="/explore?vegan=1" role="button">vegan</a>
     <h2>Current Offers</h2>
     {% for offer in offers %}
         {% include '_offer.html' %}

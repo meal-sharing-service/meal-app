@@ -1,3 +1,4 @@
+geopy
 alembic==1.5.4
 blinker==1.4
 certifi==2020.12.5
