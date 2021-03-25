@@ -68,6 +68,7 @@ def explore():
         print(distance)
         print(info.vegan)
         print(maxdist)
+        print(info.vegan != vegan)
         if info.vegan != vegan or distance > maxdist:
             print("removing: ")
             offers.items.remove(info)
