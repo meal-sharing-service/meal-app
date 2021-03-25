@@ -66,7 +66,7 @@
     <form id="form" action="explore.html">
         <input type="text" id="vega" /> VEGAN
         <input type="text" id="dist" /> Distance
-        <input type="submit" onclick="location.href='\explore.html?vegan='+ document.getElementById('vega').value+'&distance='+document.getElementById('dist').value;"/>
+        <input type="submit" onclick="location.href='\explore?vegan='+ document.getElementById('vega').value+'&distance='+document.getElementById('dist').value;"/>
     </form>
     <h2>Current Offers</h2>
     {% for offer in offers %}
