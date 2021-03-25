@@ -559,9 +559,9 @@ def get_offer(id, check_author=True):
     if offer is None:
         abort(404, "Offer id {0} doesn't exist.".format(id))
 
-    if check_author and offer.author.username != current_user.username:
+    """if check_author and offer.author.username != current_user.username:
         abort(403)
-
+"""
     return offer
 
 
