@@ -65,7 +65,8 @@ def explore():
         c2 = (current_user.lat, current_user.lng)
         distance = geopy.distance.geodesic(c1, c2).km
         if info.vegan is vegan and distance < maxdist:
-            offers.remove(info)
+            print("removing: ")
+            offers.items.remove(info)
 
     next_url = url_for('explore', page=offers.next_num) \
         if offers.has_next else None
