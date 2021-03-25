@@ -44,6 +44,11 @@ def explore():
 
     maxdist = request.args.get('distance', default=500, type=int)
     vegan = request.args.get('vegan', default=False, type=bool)
+    vegani = False
+    if vegan == "true" or vegan == "True" or vegan == "1":
+        vegani = True
+    else:
+        vegani = False
 
     for info in offers2:
         if info.timestamp > (datetime.today() - timedelta(days=1)):
@@ -64,12 +69,12 @@ def explore():
         c1 = (info.author.lat, info.author.lng)
         c2 = (current_user.lat, current_user.lng)
         distance = geopy.distance.geodesic(c1, c2).km
-        print(vegan)
+        print(vegani)
         print(distance)
         print(info.vegan)
         print(maxdist)
-        print(info.vegan != vegan)
-        if info.vegan != vegan or distance > maxdist:
+        print(info.vegan != vegani)
+        if info.vegan != vegani or distance > maxdist:
             print("removing: ")
             offers.items.remove(info)
 
