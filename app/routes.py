@@ -43,7 +43,7 @@ def explore():
     data = []
 
     maxdist = request.args.get('distance', default=500, type=int)
-    vegan = request.args.get('vegan', default=0, type=bool)
+    vegan = request.args.get('vegan', default=False, type=bool)
 
     for info in offers2:
         if info.timestamp > (datetime.today() - timedelta(days=1)):
