@@ -64,6 +64,10 @@ def explore():
         c1 = (info.author.lat, info.author.lng)
         c2 = (current_user.lat, current_user.lng)
         distance = geopy.distance.geodesic(c1, c2).km
+        print(vegan)
+        print(distance)
+        print(info.vegan)
+        print(maxdist)
         if info.vegan is vegan and distance < maxdist:
             print("removing: ")
             offers.items.remove(info)
