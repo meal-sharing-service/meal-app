@@ -43,7 +43,7 @@ def explore():
     data = []
 
     maxdist = request.args.get('distance', default=500, type=int)
-    vegan = request.args.get('vegan', default=False, type=bool)
+    vegan = request.args.get('vegan', default=False, type=str)
 
     vegani = False
     print(vegan=="True")
