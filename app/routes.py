@@ -54,7 +54,7 @@ def explore():
     for info in offers2:
         c1 = (info.author.lat, info.author.lng)
         c2 = (current_user.lat, current_user.lng)
-        distance = geopy.distance.vincenty(c1, c2).km
+        distance = geopy.distance.geodesic(c1, c2).km
         if info.timestamp > (datetime.today() - timedelta(days=1)):
             if info.vegan is vegan and distance < maxdist:
                 data.append({
